@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://ddsgb1ikxu5ph"]
+
+[ext_resource type="Script" uid="uid://bisd3pb0yike1" path="res://scripts/fx/LaserBlastDecal.gd" id="1_6grcg"]
+
+[sub_resource type="Gradient" id="Gradient_1bvp3"]
+offsets = PackedFloat32Array(0, 0.0929648, 0.741206)
+colors = PackedColorArray(0.13, 0.13, 0.13, 1, 0.19, 0.19, 0.19, 0.890196, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_m4vuv"]
+gradient = SubResource("Gradient_1bvp3")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_m4vuv"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.0929648, 0.248744, 1)
+colors = PackedColorArray(3, 2, 0.5, 1, 1, 0.19, 0.2, 1, 0.24031, 0.0456589, 0.048062, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6grcg"]
+gradient = SubResource("Gradient_m4vuv")
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="LaserBlast" type="Decal"]
+size = Vector3(1, 0.5, 1)
+texture_albedo = SubResource("GradientTexture2D_m4vuv")
+texture_emission = SubResource("GradientTexture2D_6grcg")
+emission_energy = 5.0
+albedo_mix = 0.75
+script = ExtResource("1_6grcg")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bs8o1uhnwkovs"]
+[gd_scene load_steps=4 format=3 uid="uid://bs8o1uhnwkovs"]
 
 [ext_resource type="PackedScene" uid="uid://3mwscspo8fbr" path="res://assets/environments/test_range/test_range.blend" id="1_nkd1n"]
+[ext_resource type="PackedScene" uid="uid://ddsgb1ikxu5ph" path="res://resources/weapon_fx/laser_blast_decal.tscn" id="2_kvp7l"]
 
 [sub_resource type="Environment" id="Environment_o1bfj"]
 background_mode = 1
@@ -28,9 +29,13 @@ fov = 56.4
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
 transform = Transform3D(-0.965032, -0.262003, 0.00820643, -0.182628, 0.694468, 0.695961, -0.188043, 0.670126, -0.718033, 8.83491, 6.98208, -15.5479)
+light_energy = 0.75
+light_angular_distance = 3.0
 shadow_enabled = true
 
 [node name="Markers" type="Node3D" parent="."]
 
 [node name="PlayerSpawn" type="Marker3D" parent="Markers"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.63178, 0, -14.5596)
+
+[node name="LaserBlast" parent="." instance=ExtResource("2_kvp7l")]

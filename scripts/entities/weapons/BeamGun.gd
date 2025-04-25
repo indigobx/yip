@@ -5,13 +5,18 @@ extends Node3D
 @export var charged_damage := 20
 
 var is_firing := false
+var beam_scene = preload("res://scenes/fx/laser.tscn")
+var beam_instance
+var laser_blast = preload("res://resources/weapon_fx/laser_blast_decal.tscn")
 
+var effects_manager
 
 func _ready() -> void:
   InputHandler.connect("fire_pressed", Callable(self, "_on_fire_pressed"))
   InputHandler.connect("fire_released", Callable(self, "_on_fire_released"))
   InputHandler.connect("fire_single", Callable(self, "_on_fire_single"))
   InputHandler.connect("fire_charge", Callable(self, "_on_fire_charge"))
+  effects_manager = get_tree().root.get_node("Main/Managers/EffectsManager")
 
 func _on_fire_pressed() -> void:
   if not is_firing:
@@ -30,11 +35,15 @@ func _on_fire_charge() -> void:
   _update_beam()
 
 func _start_beam() -> void:
-  $BeamParticles.emitting = true
+  beam_instance = beam_scene.instantiate()
+  beam_instance.size = 0.2
+  add_child(beam_instance)
+  $HitParticles.emitting = true
   _update_beam()
 
 func _stop_beam() -> void:
-  $BeamParticles.emitting = false
+  $HitParticles.emitting = false
+  beam_instance.queue_free()
 
 func _process(_delta: float) -> void:
   if is_firing:
@@ -45,12 +54,13 @@ func _update_beam() -> void:
   var to = GameState.cursor_world_pos
   var direction = (to - from).normalized()
   var hit = _raycast(from, direction)
-  print(from, '  ', to, '  ', hit)
+  #print(from, '  ', to, '  ', hit)
 
-  $BeamParticles.look_at(hit)
-  var middle = (from - hit) / 2
-  #$Beam.mesh.center_offset = hit
-
+  beam_instance.global_position = from
+  beam_instance.target = hit
+  $HitParticles.global_position = hit
+  $HitParticles.process_material.direction = -direction
+  effects_manager.add_decal(laser_blast, hit, 0.5)
 
 
 func _raycast(from: Vector3, dir: Vector3) -> Vector3:

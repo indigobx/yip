@@ -1,8 +1,11 @@
+res://scripts/fx
+res://resources/weapon_fx
 res://scripts/core
+res://resources/shaders
+res://scenes/fx
 res://scripts/entities/weapons
 E:/Godot/yip/addons/sprite_sheet_importer
 res://assets/characters/vega
-res://tools
 res://scenes/world
 res://globals
 res://scripts/entities

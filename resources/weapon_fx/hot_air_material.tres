@@ -1,0 +1,13 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://cibaxodm3cxwl"]
+
+[ext_resource type="Shader" uid="uid://c11t6l7u2q2t4" path="res://resources/shaders/hot_air.gdshader" id="1_b5kql"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_b5kql"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_b5kql")
+shader_parameter/NOISE_TEXTURE = SubResource("NoiseTexture2D_b5kql")
+shader_parameter/distortion_strength = 0.25
+shader_parameter/noise_scale = 1.0
+shader_parameter/time_scale = 1.0
