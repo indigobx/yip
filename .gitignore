@@ -1,0 +1,45 @@
+# Godot-specific folders
+.import/
+.export/
+godot/tmp/
+
+# Godot-specific files
+export_presets.cfg
+
+# Mono (C#) specific (если используешь C#)
+.mono/
+data_*/        # Временные файлы компиляции
+*.csproj
+*.sln
+*.user
+*.pidb
+*.dll
+*.mdb
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+
+# VS Code
+.vscode/
+
+# Build output (если ты экспортируешь игру в эти форматы)
+*.exe
+*.pck
+*.apk
+*.xcodeproj
+*.a
+*.so
+*.dylib
+
+# Logs
+logs/
+
+# Optional Godot config cache
+.cache/

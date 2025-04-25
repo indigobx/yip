@@ -1,0 +1,66 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="YIP"
+run/main_scene="uid://dmu6q4qp88txl"
+config/features=PackedStringArray("4.4", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Config="*res://globals/Config.gd"
+GameState="*res://globals/GameState.gd"
+PlayerData="*res://globals/PlayerData.gd"
+InputHandler="*res://globals/InputHandler.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/s2sf/plugin.cfg")
+
+[input]
+
+move_up={
+"deadzone": 0.2,
+"events": []
+}
+move_down={
+"deadzone": 0.2,
+"events": []
+}
+move_left={
+"deadzone": 0.2,
+"events": []
+}
+move_right={
+"deadzone": 0.2,
+"events": []
+}
+jump={
+"deadzone": 0.2,
+"events": []
+}
+fire={
+"deadzone": 0.2,
+"events": []
+}
+interact={
+"deadzone": 0.2,
+"events": []
+}
+zoom_in={
+"deadzone": 0.2,
+"events": []
+}
+zoom_out={
+"deadzone": 0.2,
+"events": []
+}

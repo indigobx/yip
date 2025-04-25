@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://dmu6q4qp88txl"]
+
+[ext_resource type="Script" uid="uid://bygtsqd7lpp30" path="res://scripts/core/Game.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://dkrxvk8x1o0vr" path="res://scenes/ui/ui.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://lbdrct38khms" path="res://scripts/core/CameraManager.gd" id="3_h2yge"]
+
+[node name="Main" type="Node"]
+
+[node name="Game" type="Node3D" parent="."]
+script = ExtResource("1_0xm2m")
+
+[node name="Entities" type="Node3D" parent="Game"]
+
+[node name="UI" parent="Game" instance=ExtResource("1_ig7tw")]
+
+[node name="Managers" type="Node" parent="."]
+
+[node name="CameraController" type="Node3D" parent="Managers"]
+script = ExtResource("3_h2yge")
+
+[node name="Camera3D" type="Camera3D" parent="Managers/CameraController"]
+current = true
+fov = 30.0
+size = 15.0
+
+[node name="EffectsManager" type="Node" parent="Managers"]

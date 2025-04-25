@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://bip1r7q8rq7pu"]
+
+[ext_resource type="Script" uid="uid://d2axuikpiux02" path="res://scripts/entities/weapons/BeamGun.gd" id="1_02me6"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_02me6"]
+particle_flag_align_y = true
+emission_shape = 3
+emission_box_extents = Vector3(0.01, 0.01, 1)
+direction = Vector3(0, 0, 1)
+spread = 5.0
+initial_velocity_min = 0.1
+initial_velocity_max = 5.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.75
+scale_max = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_02me6"]
+blend_mode = 1
+cull_mode = 2
+albedo_color = Color(2, 1, 1, 1)
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_p538g"]
+material = SubResource("StandardMaterial3D_02me6")
+size = 0.5
+section_length = 0.5
+
+[node name="BeamGun" type="Node3D"]
+script = ExtResource("1_02me6")
+
+[node name="BeamParticles" type="GPUParticles3D" parent="."]
+amount = 32
+lifetime = 0.1
+preprocess = 0.2
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_02me6")
+draw_pass_1 = SubResource("RibbonTrailMesh_p538g")

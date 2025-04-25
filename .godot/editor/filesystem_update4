@@ -1,0 +1,16 @@
+res://main.tscn
+res://resources/characters/vega.tres
+res://scenes/ui/ui.tscn
+res://scripts/core/game.gd
+res://scenes/player/vega.tscn
+res://scenes/world/00_test_range/level.tscn
+res://scripts/entities/vega.gd
+res://scripts/core/camera_manager.gd
+res://globals/InputHandler.gd
+res://globals/Config.gd
+res://globals/GameState.gd
+res://scripts/entities/weapons/BeamGun.gd
+res://scenes/weapons/BeamGun.tscn
+res://globals/PlayerData.gd
+res://scripts/entities/Vega.gd
+res://scripts/core/WeaponController.gd

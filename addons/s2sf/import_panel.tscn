@@ -1,0 +1,85 @@
+[gd_scene load_steps=2 format=3 uid="uid://caiik7o20h2u0"]
+
+[ext_resource type="Script" uid="uid://clpq4tf3lgmqo" path="res://addons/s2sf/import_panel.gd" id="1_6nsr5"]
+
+[node name="ImportPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_6nsr5")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 171.0
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Sprite Sheets Path"
+
+[node name="Folder" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="FolderPath" type="LineEdit" parent="VBoxContainer/Folder"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "res://assets/sprites/"
+
+[node name="BrowseFolderButton" type="Button" parent="VBoxContainer/Folder"]
+layout_mode = 2
+text = "📂"
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Sprite Size"
+
+[node name="Frame" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="FrameSizeX" type="SpinBox" parent="VBoxContainer/Frame"]
+layout_mode = 2
+size_flags_vertical = 3
+min_value = 1.0
+max_value = 1024.0
+value = 64.0
+prefix = "X"
+
+[node name="FrameSizeY" type="SpinBox" parent="VBoxContainer/Frame"]
+layout_mode = 2
+size_flags_vertical = 3
+min_value = 1.0
+max_value = 1024.0
+value = 64.0
+prefix = "Y"
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "SpriteFrames Output"
+
+[node name="Output" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="OutputPath" type="LineEdit" parent="VBoxContainer/Output"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "res://resources/characters/"
+
+[node name="BrowseOutputButton" type="Button" parent="VBoxContainer/Output"]
+layout_mode = 2
+text = "💾"
+
+[node name="ImportButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Import"
+
+[node name="Message" type="Label" parent="VBoxContainer"]
+layout_mode = 2
