@@ -1,9 +1,9 @@
+res://resources/shaders
+res://scripts/fx
 res://scripts/world
 res://scenes/misc
 res://scenes/fx
-res://scripts/fx
 res://resources/weapon_fx
-res://resources/shaders
 res://scripts/entities
 res://scenes/enemies
 res://scripts/ui

@@ -57,6 +57,7 @@ func _update_cursor() -> void:
   var result = space_state.intersect_ray(query)
 
   GameState.cursor_world_pos = result.position if result else to
+  GameState.focus_point = GameState.cursor_world_pos
   cursor.global_position = GameState.cursor_world_pos
   emit_signal("cursor_updated", GameState.cursor_screen_pos, GameState.cursor_world_pos)
 

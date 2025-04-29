@@ -1,9 +1,19 @@
-[gd_scene load_steps=5 format=3 uid="uid://dmu6q4qp88txl"]
+[gd_scene load_steps=8 format=3 uid="uid://dmu6q4qp88txl"]
 
 [ext_resource type="Script" uid="uid://bygtsqd7lpp30" path="res://scripts/core/Game.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dkrxvk8x1o0vr" path="res://scenes/ui/ui.tscn" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://lbdrct38khms" path="res://scripts/core/CameraManager.gd" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://dtb0r867pdng2" path="res://scripts/core/EffectsManager.gd" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://cnwas6vyd1ddn" path="res://scripts/fx/FOV.gd" id="5_lquwl"]
+[ext_resource type="Shader" uid="uid://bbdtdlpvmpvph" path="res://resources/shaders/fov_blur.gdshader" id="6_7mycd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
+shader = ExtResource("6_7mycd")
+shader_parameter/camera_global_transform = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
+shader_parameter/focus_point = Vector3(0, 0, 0)
+shader_parameter/vision_point = Vector3(0, 0, 0)
+shader_parameter/sharp_fov_deg = 30.0
+shader_parameter/peripheral_fov_deg = 90.0
 
 [node name="Main" type="Node"]
 
@@ -28,3 +38,17 @@ size = 15.0
 script = ExtResource("4_1bvp3")
 
 [node name="Decals" type="Node3D" parent="Managers/EffectsManager"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Managers/EffectsManager"]
+script = ExtResource("5_lquwl")
+
+[node name="FovRect" type="ColorRect" parent="Managers/EffectsManager/CanvasLayer"]
+material = SubResource("ShaderMaterial_272bh")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
