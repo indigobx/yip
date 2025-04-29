@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-@export var move_speed := 5.0
+@export var move_speed := 6.0
 @export var jump_velocity := 4.5
 @export var gravity := 9.8
 
@@ -20,6 +20,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
   _apply_gravity(delta)
+  _cast_shadow()
   _move_player(delta)
   _rotate_to_cursor()
   _update_pos()
@@ -35,11 +36,12 @@ func _rotate_to_cursor() -> void:
   if direction.length_squared() < 0.01:
     return
 
-  var angle = atan2(direction.x, direction.z)
-  $Geo.rotation.y = angle + PI
+  var angle = atan2(direction.x, direction.z) + PI
+  $Geo.rotation.y = angle
+  $Discrete.rotation_degrees.y = angle_to_8dir(rad_to_deg(angle)) * 45
 
 func _update_pos() -> void:
-  GameState.gun_muzzle_pos = $Geo/Muzzle.global_position
+  GameState.gun_muzzle_pos = $Discrete/Muzzle.global_position
 
 func _on_move_input(vec: Vector2) -> void:
   input_vector = vec
@@ -47,8 +49,11 @@ func _on_move_input(vec: Vector2) -> void:
 func _apply_gravity(delta: float) -> void:
   if not is_on_floor():
     velocity.y -= gravity * delta
-  else:
-    velocity.y = 0.0
+  #else:
+    #velocity.y = 0.0
+
+func _cast_shadow() -> void:
+  pass
 
 func _move_player(_delta: float) -> void:
   var direction = (transform.basis.x * input_vector.x + transform.basis.z * input_vector.y).normalized()
@@ -57,14 +62,16 @@ func _move_player(_delta: float) -> void:
   move_and_slide()
 
 func _on_jump_pressed() -> void:
+  print("jump")
   if is_on_floor():
+    print("jumping")
     velocity.y = jump_velocity
 
 func _on_interact_pressed() -> void:
   print("Interact")
 
 func _update_animation() -> void:
-  state = "walk" if input_vector.length_squared() > 0.01 else "walk"
+  state = "walk" if input_vector.length_squared() > 0.01 else "idle"
   var dir = angle_to_8dir($Geo.rotation_degrees.y)
   play_animation(state, dir)
 

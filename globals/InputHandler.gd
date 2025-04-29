@@ -17,17 +17,18 @@ const CLICK_THRESHOLD_MS := 200
 var _movement_vector := Vector2.ZERO
 var _camera: Camera3D = null
 
-@onready var debug_cursor := MeshInstance3D.new()
+#@onready var debug_cursor := MeshInstance3D.new()
+@onready var cursor_scene = preload("res://scenes/misc/cursor.tscn")
+var cursor
 
 
 func set_camera(camera: Camera3D) -> void:
   _camera = camera
 
 func _ready() -> void:
-  add_child(debug_cursor)
-  debug_cursor.mesh = SphereMesh.new()
-  debug_cursor.mesh.radius = 0.2
-  debug_cursor.mesh.height = 0.4
+  cursor = cursor_scene.instantiate()
+  add_child(cursor)
+
 
 func _process(_delta: float) -> void:
   _update_movement()
@@ -56,7 +57,7 @@ func _update_cursor() -> void:
   var result = space_state.intersect_ray(query)
 
   GameState.cursor_world_pos = result.position if result else to
-  debug_cursor.global_position = GameState.cursor_world_pos
+  cursor.global_position = GameState.cursor_world_pos
   emit_signal("cursor_updated", GameState.cursor_screen_pos, GameState.cursor_world_pos)
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://db03cna4h8wfi"]
+
+[ext_resource type="Script" uid="uid://5ooxwt6skuvx" path="res://scripts/fx/FOVVisual.gd" id="1_7262p"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_7262p"]
+
+[node name="FOVVisual" type="Node3D"]
+script = ExtResource("1_7262p")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PrismMesh_7262p")

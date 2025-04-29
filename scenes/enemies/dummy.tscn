@@ -1,0 +1,68 @@
+[gd_scene load_steps=9 format=3 uid="uid://ea4t8lrb5laj"]
+
+[ext_resource type="Script" uid="uid://ctrg4xla5bunh" path="res://scripts/entities/dummy.gd" id="1_3afmq"]
+[ext_resource type="Texture2D" uid="uid://djipjbakyo7vx" path="res://assets/characters/dummy.png" id="1_5p3ry"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3afmq"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_niafq"]
+height = 0.8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_5p3ry"]
+height = 0.5
+radius = 0.3
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rpbf4"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_5p3ry")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_teax5"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0.198492, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tl16f"]
+gradient = SubResource("Gradient_teax5")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[node name="Dummy" type="CharacterBody3D"]
+script = ExtResource("1_3afmq")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_3afmq")
+
+[node name="Geo" type="Node3D" parent="."]
+
+[node name="HurtBox" type="Area3D" parent="Geo"]
+
+[node name="Body" type="CollisionShape3D" parent="Geo/HurtBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("CylinderShape3D_niafq")
+
+[node name="Head" type="CollisionShape3D" parent="Geo/HurtBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+shape = SubResource("CylinderShape3D_5p3ry")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0.85, 0)
+billboard = 1
+shaded = true
+alpha_cut = 2
+texture_filter = 0
+sprite_frames = SubResource("SpriteFrames_rpbf4")
+
+[node name="Shadow" type="Decal" parent="."]
+size = Vector3(2, 0.1, 2)
+texture_albedo = SubResource("GradientTexture2D_tl16f")

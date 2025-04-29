@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bip1r7q8rq7pu"]
+[gd_scene load_steps=12 format=3 uid="uid://bip1r7q8rq7pu"]
 
 [ext_resource type="Script" uid="uid://d2axuikpiux02" path="res://scripts/entities/weapons/BeamGun.gd" id="1_02me6"]
 [ext_resource type="Material" uid="uid://c0dglth538j2a" path="res://resources/weapon_fx/hot_drop_material_3d.tres" id="2_p538g"]
@@ -6,7 +6,7 @@
 [sub_resource type="Gradient" id="Gradient_p538g"]
 colors = PackedColorArray(1, 1, 1, 1, 0.12, 0, 0.036, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_75ag4"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_p538g"]
 gradient = SubResource("Gradient_p538g")
 width = 64
 
@@ -14,15 +14,49 @@ width = 64
 particle_flag_align_y = true
 direction = Vector3(0, -1, 0)
 spread = 15.0
-initial_velocity_min = 5.0
-initial_velocity_max = 8.0
-scale_min = 0.05
+initial_velocity_min = 1.0
+initial_velocity_max = 15.0
+scale_min = 0.02
 scale_max = 0.1
-color_ramp = SubResource("GradientTexture1D_75ag4")
+color_ramp = SubResource("GradientTexture1D_p538g")
 
 [sub_resource type="QuadMesh" id="QuadMesh_75ag4"]
 material = ExtResource("2_p538g")
 size = Vector2(0.5, 0.5)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jpa4m"]
+emission_shape = 1
+emission_sphere_radius = 0.25
+direction = Vector3(0, 0, -1)
+initial_velocity_min = 0.5
+initial_velocity_max = 1.0
+gravity = Vector3(0, 0, 0)
+scale_min = 0.8
+scale_max = 2.5
+
+[sub_resource type="Gradient" id="Gradient_75ag4"]
+colors = PackedColorArray(4, 2, 1, 1, 1, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jpa4m"]
+gradient = SubResource("Gradient_75ag4")
+use_hdr = true
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ahhku"]
+render_priority = 10
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+albedo_texture = SubResource("GradientTexture2D_jpa4m")
+emission_enabled = true
+emission = Color(1, 0.9, 0.9, 1)
+billboard_mode = 2
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_p538g"]
+material = SubResource("StandardMaterial3D_ahhku")
+sections = 3
 
 [node name="BeamGun" type="Node3D"]
 script = ExtResource("1_02me6")
@@ -36,3 +70,28 @@ randomness = 0.5
 fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_02me6")
 draw_pass_1 = SubResource("QuadMesh_75ag4")
+
+[node name="MuzzleParticles" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+lifetime = 0.05
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_jpa4m")
+draw_pass_1 = SubResource("RibbonTrailMesh_p538g")
+
+[node name="Lights" type="Node3D" parent="."]
+visible = false
+
+[node name="MuzzleLight" type="OmniLight3D" parent="Lights"]
+light_color = Color(0.72, 0.4032, 0.324, 1)
+light_energy = 15.0
+shadow_enabled = true
+shadow_blur = 8.0
+omni_range = 8.0
+
+[node name="HitLight" type="OmniLight3D" parent="Lights"]
+light_color = Color(0.72, 0.4032, 0.324, 1)
+light_energy = 50.0
+shadow_enabled = true
+shadow_blur = 2.0
+omni_range = 10.0

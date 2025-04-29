@@ -1,16 +1,16 @@
 [gd_scene load_steps=7 format=3 uid="uid://cjq7b4e6227qc"]
 
-[ext_resource type="Material" uid="uid://dsgjm3te0v01d" path="res://resources/weapon_fx/laser_material_3d.tres" id="1_ejtef"]
 [ext_resource type="Script" uid="uid://cfyfgwmdu36qb" path="res://scripts/fx/LaserBeam.gd" id="1_pl884"]
+[ext_resource type="Material" uid="uid://m3m60u6vlhog" path="res://resources/weapon_fx/laser_shader_material.tres" id="2_pikkf"]
 [ext_resource type="Material" uid="uid://cibaxodm3cxwl" path="res://resources/weapon_fx/hot_air_material.tres" id="3_pikkf"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_pl884"]
-material = ExtResource("1_ejtef")
+material = ExtResource("2_pikkf")
 center_offset = Vector3(0, 0.5, 0)
 orientation = 0
 
 [sub_resource type="QuadMesh" id="QuadMesh_pikkf"]
-material = ExtResource("1_ejtef")
+material = ExtResource("2_pikkf")
 center_offset = Vector3(0, 0.5, 0)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_pl884"]
@@ -21,6 +21,7 @@ height = 1.0
 
 [node name="LaserBeam" type="Node3D"]
 script = ExtResource("1_pl884")
+pulse = true
 
 [node name="QuadMeshA" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)

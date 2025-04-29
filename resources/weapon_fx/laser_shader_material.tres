@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://m3m60u6vlhog"]
+
+[ext_resource type="Shader" uid="uid://dkkc5xwmkq6t0" path="res://resources/shaders/laser.gdshader" id="1_1ejv7"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_1ejv7")
+shader_parameter/center_color = Color(5, 3, 0, 1)
+shader_parameter/mid_color = Color(2, 0, 0, 1)
+shader_parameter/edge_color = Color(0, 0, 0, 0)
+shader_parameter/cubic_interpolation = true

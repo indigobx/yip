@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://dkrxvk8x1o0vr"]
+[gd_scene load_steps=2 format=3 uid="uid://dkrxvk8x1o0vr"]
+
+[ext_resource type="Script" uid="uid://bd8ijyoxg06l7" path="res://scripts/ui/hud.gd" id="1_u7n8c"]
 
 [node name="UI" type="CanvasLayer"]
 
@@ -7,6 +9,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("1_u7n8c")
 
 [node name="Debug" type="Label" parent="HUD"]
 layout_mode = 0

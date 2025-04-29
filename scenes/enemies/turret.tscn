@@ -1,0 +1,107 @@
+[gd_scene load_steps=13 format=3 uid="uid://dmotse4piwnuh"]
+
+[ext_resource type="Script" uid="uid://bdnjyftvj6ini" path="res://scripts/entities/turret.gd" id="1_40hkx"]
+[ext_resource type="PackedScene" uid="uid://t2u1y7pgh6ga" path="res://scenes/misc/fov_sensor.tscn" id="2_upm3w"]
+[ext_resource type="Material" uid="uid://c0dglth538j2a" path="res://resources/weapon_fx/hot_drop_material_3d.tres" id="3_ecoe6"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_gexju"]
+height = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_40hkx"]
+top_radius = 0.45
+bottom_radius = 0.45
+height = 0.6
+
+[sub_resource type="SphereMesh" id="SphereMesh_upm3w"]
+radius = 0.15
+height = 0.3
+radial_segments = 32
+rings = 16
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ecoe6"]
+top_radius = 0.25
+bottom_radius = 0.3
+height = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_ue2uv"]
+size = Vector3(0.1, 0.2, 1)
+
+[sub_resource type="Gradient" id="Gradient_ecoe6"]
+colors = PackedColorArray(1, 1, 1, 1, 0.12, 0, 0.036, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ue2uv"]
+gradient = SubResource("Gradient_ecoe6")
+width = 64
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_oabpu"]
+particle_flag_align_y = true
+direction = Vector3(0, -1, 0)
+spread = 90.0
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+scale_min = 0.02
+scale_max = 0.1
+color_ramp = SubResource("GradientTexture1D_ue2uv")
+
+[sub_resource type="QuadMesh" id="QuadMesh_wqsho"]
+material = ExtResource("3_ecoe6")
+size = Vector2(0.5, 0.5)
+
+[node name="Turret" type="CharacterBody3D"]
+script = ExtResource("1_40hkx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_gexju")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("CylinderMesh_40hkx")
+
+[node name="Sensor" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("SphereMesh_upm3w")
+
+[node name="FOVSensor" parent="Body/Sensor" instance=ExtResource("2_upm3w")]
+distance_max = 35.01
+fov_horizontal = 0.0872665
+fov_vertical = 0.174533
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("CylinderMesh_ecoe6")
+
+[node name="BarrelPivot" type="Marker3D" parent="Head"]
+
+[node name="Barrel" type="MeshInstance3D" parent="Head/BarrelPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.661606)
+mesh = SubResource("BoxMesh_ue2uv")
+skeleton = NodePath("../..")
+
+[node name="Muzzle" type="Marker3D" parent="Head/BarrelPivot/Barrel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0406982, 0.516656)
+
+[node name="CooldownTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="HitLight" type="OmniLight3D" parent="."]
+visible = false
+light_color = Color(0.324, 0.5484, 0.72, 1)
+light_energy = 50.0
+shadow_enabled = true
+shadow_blur = 2.0
+omni_range = 10.0
+
+[node name="HitParticles" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 32
+lifetime = 0.3
+explosiveness = 0.8
+randomness = 0.5
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_oabpu")
+draw_pass_1 = SubResource("QuadMesh_wqsho")
+
+[connection signal="body_entered" from="Body/Sensor/FOVSensor" to="." method="_on_fov_sensor_body_entered"]
+[connection signal="body_exited" from="Body/Sensor/FOVSensor" to="." method="_on_fov_sensor_body_exited"]
+[connection signal="timeout" from="CooldownTimer" to="." method="_on_cooldown_timer_timeout"]
