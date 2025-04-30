@@ -1,34 +1,14 @@
-[gd_scene load_steps=7 format=3 uid="uid://bs8o1uhnwkovs"]
+[gd_scene load_steps=5 format=3 uid="uid://bs8o1uhnwkovs"]
 
 [ext_resource type="PackedScene" uid="uid://3mwscspo8fbr" path="res://assets/environments/test_range/test_range.blend" id="1_nkd1n"]
 [ext_resource type="PackedScene" uid="uid://ddsgb1ikxu5ph" path="res://resources/weapon_fx/laser_blast_decal.tscn" id="2_kvp7l"]
 [ext_resource type="PackedScene" uid="uid://ea4t8lrb5laj" path="res://scenes/enemies/dummy.tscn" id="3_41rvd"]
 [ext_resource type="PackedScene" uid="uid://dmotse4piwnuh" path="res://scenes/enemies/turret.tscn" id="4_ld2mo"]
 
-[sub_resource type="Environment" id="Environment_o1bfj"]
-background_mode = 1
-background_color = Color(0.0295066, 0.0295066, 0.0295066, 1)
-ssao_enabled = true
-ssil_enabled = true
-glow_enabled = true
-glow_normalized = true
-fog_light_color = Color(0.968627, 0.968627, 0.972549, 1)
-volumetric_fog_density = 0.131
-volumetric_fog_gi_inject = 1.43
-
-[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_41rvd"]
-auto_exposure_enabled = true
-auto_exposure_speed = 4.0
-auto_exposure_min_exposure_value = -2.0
-
 [node name="Test_Range" type="Node3D"]
 
 [node name="test_range" parent="." instance=ExtResource("1_nkd1n")]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 10, 0, -10)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_o1bfj")
-camera_attributes = SubResource("CameraAttributesPhysical_41rvd")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 10, 10, 0)
@@ -40,6 +20,7 @@ fov = 56.4
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
 transform = Transform3D(-0.965032, -0.262004, 0.00820607, -0.182628, 0.694468, 0.695961, -0.188043, 0.670126, -0.718033, 8.835, 3.99, -15.548)
 visible = false
+layers = 3
 light_energy = 0.05
 light_indirect_energy = 0.5
 light_angular_distance = 1.0
@@ -48,6 +29,7 @@ shadow_enabled = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.6483, 3.41105, -8.35346)
+layers = 3
 light_color = Color(1, 0.22, 0.22, 1)
 light_size = 0.2
 shadow_enabled = true
@@ -56,7 +38,9 @@ omni_attenuation = 2.0
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.34093, 3.41105, -12.8817)
+layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
+light_energy = 10.0
 light_size = 0.2
 shadow_enabled = true
 omni_range = 25.0
@@ -64,6 +48,7 @@ omni_attenuation = 2.0
 
 [node name="OmniLight3D3" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.9203, 3.41105, -27.9646)
+layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
 light_size = 0.2
 shadow_enabled = true
@@ -72,6 +57,7 @@ omni_attenuation = 2.0
 
 [node name="OmniLight3D4" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.54861, 3.41105, 35.3803)
+layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
 light_size = 0.2
 shadow_enabled = true
@@ -84,6 +70,7 @@ omni_attenuation = 2.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.63178, 0, -14.5596)
 
 [node name="LaserBlast" parent="." instance=ExtResource("2_kvp7l")]
+layers = 3
 
 [node name="Dummy" parent="." instance=ExtResource("3_41rvd")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.0345, 0, -31.6151)

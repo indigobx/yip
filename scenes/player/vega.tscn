@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bcspvren45htu"]
+[gd_scene load_steps=11 format=3 uid="uid://bcspvren45htu"]
 
 [ext_resource type="Script" uid="uid://x6tgpmlg5b5q" path="res://scripts/entities/Vega.gd" id="1_0d51e"]
 [ext_resource type="SpriteFrames" uid="uid://c5qju55ftiq23" path="res://resources/characters/vega.tres" id="2_7eycw"]
@@ -22,6 +22,20 @@ colors = PackedColorArray(0, 0, 0, 0.203922, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_errjk"]
 gradient = SubResource("Gradient_teax5")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_errjk"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.0502513, 0.0904523, 0.211055, 0.281407, 0.733668, 1)
+colors = PackedColorArray(0.56, 0.56, 0.56, 1, 1, 1, 1, 1, 0.0773809, 0.0773809, 0.0773809, 1, 0.33, 0.33, 0.33, 1, 0, 0, 0, 1, 0.28, 0.28, 0.28, 1, -0.0157639, -0.0157639, -0.0157639, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_p50bj"]
+gradient = SubResource("Gradient_errjk")
+width = 256
+height = 256
+use_hdr = true
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
@@ -68,3 +82,33 @@ animation = &"walk_1_2"
 [node name="Shadow_Decal" type="Decal" parent="."]
 size = Vector3(2, 0.1, 2)
 texture_albedo = SubResource("GradientTexture2D_errjk")
+
+[node name="TrackCursor" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="IRFlashlight" type="SpotLight3D" parent="TrackCursor"]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, -0.5, -0.4)
+visible = false
+light_color = Color(0.0752636, 0.236368, 0, 1)
+light_energy = 0.1
+light_indirect_energy = 25.0
+light_projector = SubResource("GradientTexture2D_p50bj")
+light_size = 0.05
+light_specular = 0.7
+shadow_enabled = true
+shadow_caster_mask = 4294967294
+spot_range = 25.0
+spot_attenuation = 0.5
+spot_angle = 80.0
+spot_angle_attenuation = 1.8025
+
+[node name="IROmni" type="OmniLight3D" parent="TrackCursor"]
+visible = false
+light_color = Color(0.35, 1, 0, 1)
+light_energy = 0.1
+light_indirect_energy = 4.0
+light_size = 0.5
+shadow_enabled = true
+shadow_caster_mask = 4294967294
+omni_range = 24.0
+omni_attenuation = 0.45

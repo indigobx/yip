@@ -10,6 +10,7 @@ signal interact_pressed
 signal zoom_in
 signal zoom_out
 signal cursor_updated(screen_pos: Vector2, world_pos: Vector3)
+signal night_vision_pressed
 
 var _fire_time_pressed := 0
 const CLICK_THRESHOLD_MS := 200
@@ -67,6 +68,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
   if event.is_action_pressed("interact"):
     emit_signal("interact_pressed")
+  
+  if event.is_action_pressed("night_vision"):
+    emit_signal("night_vision_pressed")
 
   if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
     if event.pressed:

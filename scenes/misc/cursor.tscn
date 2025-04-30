@@ -19,6 +19,7 @@ rings = 12
 [node name="Cursor" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
 layers = 16
 cast_shadow = 0
 ignore_occlusion_culling = true

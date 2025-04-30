@@ -36,28 +36,35 @@ _subresources={
 "nodes": {
 "PATH:Border_001": {
 "generate/occluder": 1,
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 },
 "PATH:Border_002": {
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 },
 "PATH:Floors": {
 "generate/navmesh": 1,
 "generate/occluder": 1,
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 },
 "PATH:ShootingRange_001": {
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 },
 "PATH:ShootingRange_002": {
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 },
 "PATH:ShootingRange_003": {
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 },
 "PATH:Walls": {
 "generate/occluder": 1,
-"generate/physics": true
+"generate/physics": true,
+"mesh_instance/layers": 3
 }
 }
 }

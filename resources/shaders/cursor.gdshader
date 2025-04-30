@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded, cull_disabled, depth_draw_always, blend_sub;
+render_mode unshaded, cull_disabled, depth_draw_always, blend_add;
 
 uniform vec4 ring_color : source_color = vec4(1.0, 0.6, 0.3, 1.0);
 uniform float center_width : hint_range(0.0, 1.0) = 0.2;

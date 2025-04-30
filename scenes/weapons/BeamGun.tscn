@@ -90,7 +90,6 @@ shadow_blur = 8.0
 omni_range = 8.0
 
 [node name="HitLight" type="OmniLight3D" parent="Lights"]
-light_color = Color(0.72, 0.4032, 0.324, 1)
 light_energy = 50.0
 shadow_enabled = true
 shadow_blur = 2.0

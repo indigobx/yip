@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dmu6q4qp88txl"]
+[gd_scene load_steps=11 format=3 uid="uid://dmu6q4qp88txl"]
 
 [ext_resource type="Script" uid="uid://bygtsqd7lpp30" path="res://scripts/core/Game.gd" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://dkrxvk8x1o0vr" path="res://scenes/ui/ui.tscn" id="1_ig7tw"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://dtb0r867pdng2" path="res://scripts/core/EffectsManager.gd" id="4_1bvp3"]
 [ext_resource type="Script" uid="uid://cnwas6vyd1ddn" path="res://scripts/fx/FOV.gd" id="5_lquwl"]
 [ext_resource type="Shader" uid="uid://bbdtdlpvmpvph" path="res://resources/shaders/fov_blur.gdshader" id="6_7mycd"]
+[ext_resource type="CameraAttributesPhysical" uid="uid://8mlk142mlhbe" path="res://resources/effects/camera_attrib.tres" id="6_272bh"]
+[ext_resource type="Environment" uid="uid://de0e2fnxh4lsm" path="res://resources/effects/world_environment.tres" id="8_5vw27"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_272bh"]
 shader = ExtResource("6_7mycd")
@@ -14,11 +16,39 @@ shader_parameter/focus_point = Vector3(0, 0, 0)
 shader_parameter/vision_point = Vector3(0, 0, 0)
 shader_parameter/sharp_fov_deg = 30.0
 shader_parameter/peripheral_fov_deg = 90.0
+shader_parameter/vision_focus_radius_min = 0.1
+shader_parameter/vision_focus_radius_max = 0.3
+shader_parameter/sharp_sensitivity = Vector3(1, 1, 1)
+shader_parameter/peripheral_sensitivity = Vector3(0.2, 0.9, 0.1)
+shader_parameter/affect_sharp_area = false
+shader_parameter/sharp_color = Vector3(0.25, 0.25, 0.25)
+shader_parameter/sharp_gamma = 1.0
+shader_parameter/sharp_contrast = 0.5
+shader_parameter/perpipheral_color = Vector3(0.25, 0.25, 0.25)
+shader_parameter/peripheral_gamma = 0.8
+shader_parameter/peripheral_contrast = 0.5
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_5vw27"]
+viewport_path = NodePath("Managers/EffectsManager/ExposureViewport")
 
 [node name="Main" type="Node"]
 
 [node name="Game" type="Node3D" parent="."]
 script = ExtResource("1_0xm2m")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Game"]
+script = ExtResource("5_lquwl")
+
+[node name="FovRect" type="ColorRect" parent="Game/CanvasLayer"]
+material = SubResource("ShaderMaterial_272bh")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 1
 
 [node name="Entities" type="Node3D" parent="Game"]
 
@@ -30,8 +60,8 @@ script = ExtResource("1_0xm2m")
 script = ExtResource("3_h2yge")
 
 [node name="Camera3D" type="Camera3D" parent="Managers/CameraController"]
+attributes = ExtResource("6_272bh")
 current = true
-fov = 30.0
 size = 15.0
 
 [node name="EffectsManager" type="Node3D" parent="Managers"]
@@ -39,16 +69,27 @@ script = ExtResource("4_1bvp3")
 
 [node name="Decals" type="Node3D" parent="Managers/EffectsManager"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="Managers/EffectsManager"]
-script = ExtResource("5_lquwl")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Managers/EffectsManager"]
+environment = ExtResource("8_5vw27")
 
-[node name="FovRect" type="ColorRect" parent="Managers/EffectsManager/CanvasLayer"]
-material = SubResource("ShaderMaterial_272bh")
-anchors_preset = 15
-anchor_right = 1.0
+[node name="CanvasLayer2" type="CanvasLayer" parent="Managers/EffectsManager"]
+layer = 2
+
+[node name="TextureRect" type="TextureRect" parent="Managers/EffectsManager/CanvasLayer2"]
+z_index = 1000
+anchors_preset = 2
+anchor_top = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-mouse_filter = 1
+offset_top = -128.0
+offset_right = 192.0
+grow_vertical = 0
+texture = SubResource("ViewportTexture_5vw27")
+
+[node name="ExposureViewport" type="SubViewport" parent="Managers/EffectsManager"]
+size = Vector2i(48, 32)
+render_target_update_mode = 4
+
+[node name="ExposureMeter" type="Camera3D" parent="Managers/EffectsManager/ExposureViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.70263)
+fov = 30.0
+near = 0.3

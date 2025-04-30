@@ -23,6 +23,7 @@ func _physics_process(delta: float) -> void:
   _cast_shadow()
   _move_player(delta)
   _rotate_to_cursor()
+  _rotate_tracker()
   _update_pos()
   _update_animation()
 
@@ -40,9 +41,12 @@ func _rotate_to_cursor() -> void:
   $Geo.rotation.y = angle
   $Discrete.rotation_degrees.y = angle_to_8dir(rad_to_deg(angle)) * 45
 
+func _rotate_tracker() -> void:
+  $TrackCursor.look_at(GameState.cursor_world_pos)
+
 func _update_pos() -> void:
   GameState.gun_muzzle_pos = $Discrete/Muzzle.global_position
-  GameState.vision_point = global_position + Vector3(0.0, 1.8, 0.0)
+  GameState.vision_point = global_position# + Vector3(0.0, 1.8, 0.0)
 
 func _on_move_input(vec: Vector2) -> void:
   input_vector = vec
@@ -94,3 +98,15 @@ func play_animation(state: String, direction: int) -> void:
     _current_anim = anim_name
   else:
     push_warning("Animation not found: %s" % anim_name)
+
+func flashlight_mode(value) -> void:
+  match value:
+    "ir_flashlight":
+      $TrackCursor/IRFlashlight.visible = true
+      $TrackCursor/IROmni.visible = false
+    "ir_omni":
+      $TrackCursor/IRFlashlight.visible = false
+      $TrackCursor/IROmni.visible = true
+    "none":
+      $TrackCursor/IRFlashlight.visible = false
+      $TrackCursor/IROmni.visible = false

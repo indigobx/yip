@@ -11,7 +11,8 @@ var default_bindings := {
   "fire": [MOUSE_BUTTON_LEFT],
   "interact": [KEY_E],
   "zoom_in": [MOUSE_BUTTON_WHEEL_UP],
-  "zoom_out": [MOUSE_BUTTON_WHEEL_DOWN]
+  "zoom_out": [MOUSE_BUTTON_WHEEL_DOWN],
+  "night_vision": [KEY_N]
 }
 
 func _ready():

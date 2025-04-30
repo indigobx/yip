@@ -46,4 +46,5 @@ func spawn_player(pos: Vector3) -> void:
   player = PLAYER_SCENE.instantiate()
   entities.add_child(player)
   player.global_position = pos
+  PlayerData.vega = player
   
