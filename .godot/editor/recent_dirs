@@ -1,3 +1,5 @@
+res://scripts/ui
+res://scenes/ui
 res://resources/effects
 res://resources/shaders
 res://scripts/fx
@@ -7,7 +9,6 @@ res://scenes/fx
 res://resources/weapon_fx
 res://scripts/entities
 res://scenes/enemies
-res://scripts/ui
 res://assets/characters
 res://assets/characters/vega
 res://scripts/core
@@ -16,5 +17,4 @@ E:/Godot/yip/addons/sprite_sheet_importer
 res://scenes/world
 res://globals
 res://scenes/player
-res://scenes/ui
 res://

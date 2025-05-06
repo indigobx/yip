@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://bp0hra7dtwbo5"]
+
+[ext_resource type="Script" uid="uid://2sxufq66up6u" path="res://scripts/ui/bar.gd" id="1_gr2fh"]
+[ext_resource type="Texture2D" uid="uid://b7dgi8fppde7v" path="res://assets/ui/icons_atlas.png" id="2_5mynu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_amvar"]
+atlas = ExtResource("2_5mynu")
+region = Rect2(66, 67, 20, 19)
+
+[node name="Bar" type="HBoxContainer"]
+custom_minimum_size = Vector2(580, 28)
+offset_right = 60.0
+offset_bottom = 24.0
+script = ExtResource("1_gr2fh")
+
+[node name="Icon" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_amvar")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="ValueBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(400, 16)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+step = 1.0
+value = 33.0
+rounded = true
+show_percentage = false
+
+[node name="Value" type="Label" parent="."]
+layout_mode = 2
+text = "100"
+vertical_alignment = 1
+
+[node name="Max" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 0.737255)
+theme_override_font_sizes/font_size = 10
+text = "100"
+vertical_alignment = 1
