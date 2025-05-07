@@ -22,6 +22,8 @@ func _ready() -> void:
   InputHandler.connect("fire_single", Callable(self, "_on_fire_single"))
   InputHandler.connect("fire_charge", Callable(self, "_on_fire_charge"))
   effects_manager = get_tree().root.get_node("Main/Managers/EffectsManager")
+  PlayerData.energy_max = charge_max
+  PlayerData.energy = charge
 
 func _on_fire_pressed() -> void:
   if charge >= minimum_charge and not is_firing:
@@ -77,7 +79,7 @@ func _physics_process(delta: float) -> void:
     charge = clampf(charge - discharge_rate*delta, 0.0, charge_max)
   if not is_firing:
     charge = clampf(charge + recharge_rate*delta, 0.0, charge_max)
-  GameState.debug_text = "Charge %.1f" % [charge]
+  PlayerData.energy = charge
 
 
 func _update_beam() -> void:

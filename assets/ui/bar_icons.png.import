@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7dgi8fppde7v"
-path="res://.godot/imported/icons_atlas.png-b41c3694baab9e82d29e1eac11a6e2a2.ctex"
+uid="uid://da1isx82ynw50"
+path="res://.godot/imported/bar_icons.png-afc896e58af89e2eadab166b7668dd82.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/ui/icons_atlas.png"
-dest_files=["res://.godot/imported/icons_atlas.png-b41c3694baab9e82d29e1eac11a6e2a2.ctex"]
+source_file="res://assets/ui/bar_icons.png"
+dest_files=["res://.godot/imported/bar_icons.png-afc896e58af89e2eadab166b7668dd82.ctex"]
 
 [params]
 
