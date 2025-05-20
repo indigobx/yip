@@ -14,6 +14,7 @@ var hud: Control = null
 
 func _ready() -> void:
   load_level("00_test_range")
+  PlayerData.connect("die", _on_die)
 
 
 func load_level(level_name: String) -> void:
@@ -47,4 +48,12 @@ func spawn_player(pos: Vector3) -> void:
   entities.add_child(player)
   player.global_position = pos
   PlayerData.vega = player
+
+func _on_die() -> void:
+  var spawn = current_level.get_node_or_null("Markers/PlayerSpawn")
+  var spawn_pos = spawn.global_position if spawn else Vector3.ZERO
+  player.global_position = spawn_pos
+  PlayerData.health = PlayerData.health_max
+  PlayerData.energy = 0.0
+  
   

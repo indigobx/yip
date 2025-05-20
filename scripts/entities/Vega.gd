@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+
 @export var move_speed := 6.0
 @export var jump_velocity := 4.5
 @export var gravity := 9.8
@@ -110,3 +111,8 @@ func flashlight_mode(value) -> void:
     "none":
       $TrackCursor/IRFlashlight.visible = false
       $TrackCursor/IROmni.visible = false
+
+func take_damage(damage) -> void:
+  PlayerData.take_damage(damage)
+
+    

@@ -6,13 +6,11 @@ var _max: float
   get:
     return _value
   set(v):
-    _value = v
     set_value(v)
 @export var max: float = 100.0:
   get:
     return _max
   set(v):
-    _max = v
     set_max(v)
 @export var show_max: bool = true
 var _type: String
@@ -20,11 +18,8 @@ var _type: String
   get:
     return _type
   set(v):
-    _type = v
     set_type(v)
 
-signal max_changed
-signal value_changed
 
 func _ready() -> void:
   $ValueBar.min_value = 0.0
@@ -35,14 +30,17 @@ func _ready() -> void:
     $Max.visible = false
 
 func set_value(v) -> void:
+  _value = v
   $Value.text = "%.0f" % v
   $ValueBar.value = v
-  emit_signal("value_changed")
+
 
 func set_max(v) -> void:
+  _max = v
   $Max.text = "%.0f" % v
   $ValueBar.max_value = v
-  emit_signal("value_changed")
+
 
 func set_type(v) -> void:
+  _type = v
   $Icon/IconSprite.play(v)

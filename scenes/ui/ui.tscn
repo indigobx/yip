@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkrxvk8x1o0vr"]
+[gd_scene load_steps=4 format=3 uid="uid://dkrxvk8x1o0vr"]
 
 [ext_resource type="Script" uid="uid://bd8ijyoxg06l7" path="res://scripts/ui/hud.gd" id="1_u7n8c"]
+
+[sub_resource type="Gradient" id="Gradient_u7n8c"]
+offsets = PackedFloat32Array(0.556872, 1)
+colors = PackedColorArray(1, 0, 0, 0, 1, 0, 0.15, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_f5cxw"]
+gradient = SubResource("Gradient_u7n8c")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
 
 [node name="UI" type="CanvasLayer"]
 
@@ -20,3 +30,20 @@ offset_bottom = 40.0
 layout_mode = 2
 text = "debug text
 debug text"
+
+[node name="Overlay" type="CanvasLayer" parent="HUD"]
+
+[node name="DamageFX" type="TextureRect" parent="HUD/Overlay"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_f5cxw")
+
+[node name="DamageTimer" type="Timer" parent="HUD/Overlay/DamageFX"]
+wait_time = 0.05
+one_shot = true
+
+[connection signal="timeout" from="HUD/Overlay/DamageFX/DamageTimer" to="HUD" method="_on_damage_timer_timeout"]

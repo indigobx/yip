@@ -53,6 +53,7 @@ func _attack(target):
   $HitParticles.global_position = target.position
   $HitLight.visible = true
   $HitParticles.emitting = true
+  PlayerData.vega.take_damage(20 * randf_range(0.9, 1.1))
   await get_tree().create_timer(0.25).timeout
   $HitLight.visible = false
   $HitParticles.emitting = false
@@ -138,3 +139,7 @@ func _on_fov_sensor_body_exited(body: Node3D) -> void:
 
 func _on_cooldown_timer_timeout() -> void:
   _change_state(TurretState.SEARCHING)
+
+
+func take_damage(damage) -> void:
+  print(damage)

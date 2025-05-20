@@ -1,6 +1,8 @@
+CanvasLayer
+Timer
+TextureRect
 MarginContainer
 SubViewport
-TextureRect
 AnimatedSprite2D
 CenterContainer
 VBoxContainer
@@ -10,6 +12,3 @@ HBoxContainer
 TextureProgressBar
 Label
 OmniLight3D
-CanvasLayer
-Node3D
-Camera3D
