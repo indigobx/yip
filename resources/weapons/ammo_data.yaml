@@ -1,0 +1,45 @@
+ammo:
+  - name: "9x19_HST_PlusP"
+    speed: 380.0
+    mass: 0.0075
+    cross_section: 0.0000636
+    drag_coef: 0.29
+    stab_type: 1  # SPIN
+    has_thruster: false
+    thrust_force: 0.0
+    fuel_mass: 0.0
+    burn_time: 0.0
+    core_mass: 0.0012
+    core_hardness: 0.3
+    ricochet_min_angle: 10.0
+    ricochet_max_angle: 65.0
+
+  - name: "7.62x51_SLAP_T"
+    speed: 1000.0
+    mass: 0.0095
+    cross_section: 0.0000636
+    drag_coef: 0.27
+    stab_type: 1  # SPIN
+    has_thruster: false
+    thrust_force: 0.0
+    fuel_mass: 0.0
+    burn_time: 0.0
+    core_mass: 0.007
+    core_hardness: 0.85
+    ricochet_min_angle: 15.0
+    ricochet_max_angle: 70.0
+
+  - name: "5.56x45_M855"
+    speed: 920.0
+    mass: 0.0041
+    cross_section: 0.00005
+    drag_coef: 0.28
+    stab_type: 1  # SPIN
+    has_thruster: false
+    thrust_force: 0.0
+    fuel_mass: 0.0
+    burn_time: 0.0
+    core_mass: 0.002
+    core_hardness: 0.6
+    ricochet_min_angle: 12.0
+    ricochet_max_angle: 68.0

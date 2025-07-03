@@ -21,6 +21,7 @@ Config="*res://globals/Config.gd"
 GameState="*res://globals/GameState.gd"
 PlayerData="*res://globals/PlayerData.gd"
 InputHandler="*res://globals/InputHandler.gd"
+AmmoRegistry="*res://globals/AmmoRegistry.gd"
 
 [display]
 
@@ -28,7 +29,7 @@ window/size/always_on_top=true
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/s2sf/plugin.cfg")
+enabled=PackedStringArray("res://addons/s2sf/plugin.cfg", "res://addons/yaml/plugin.cfg")
 
 [input]
 

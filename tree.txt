@@ -1,0 +1,127 @@
+.
+|-- README.md
+|-- addons
+|   `-- s2sf
+|       |-- import_panel.gd
+|       |-- import_panel.tscn
+|       |-- plugin.cfg
+|       `-- plugin.gd
+|-- assets
+|   |-- audio
+|   |-- characters
+|   |   |-- dummy.png
+|   |   `-- vega
+|   |       |-- wait_0.png
+|   |       |-- wait_1.png
+|   |       |-- wait_2.png
+|   |       |-- wait_3.png
+|   |       |-- wait_4.png
+|   |       |-- wait_5.png
+|   |       |-- wait_6.png
+|   |       `-- wait_7.png
+|   |-- environments
+|   |   `-- test_range
+|   |       |-- decal_01.png
+|   |       |-- decal_02.png
+|   |       |-- decal_dager.png
+|   |       |-- decal_test_range.png
+|   |       |-- floor_albedo.png
+|   |       |-- floor_bump.png
+|   |       |-- floor_normal.png
+|   |       |-- floor_orm.png
+|   |       |-- subwall_albedo.png
+|   |       |-- subwall_normal.png
+|   |       |-- test_range.blend
+|   |       |-- test_range.blend1
+|   |       |-- wall_albedo.png
+|   |       |-- wall_normal.png
+|   |       `-- wall_orm.png
+|   |-- fonts
+|   |   |-- LICENSE.TXT
+|   |   |-- Px437_Cordata_PPC-21.ttf
+|   |   |-- Px437_Cordata_PPC-400.ttf
+|   |   `-- Px437_HP_150_re.ttf
+|   `-- ui
+|       `-- bar_icons.png
+|-- config
+|-- docs
+|   `-- gdd.md
+|-- globals
+|   |-- Config.gd
+|   |-- GameState.gd
+|   |-- InputHandler.gd
+|   `-- PlayerData.gd
+|-- icon.svg
+|-- main.tscn
+|-- project.godot
+|-- resources
+|   |-- characters
+|   |   `-- vega.tres
+|   |-- effects
+|   |   |-- camera_attrib.tres
+|   |   `-- world_environment.tres
+|   |-- input
+|   |-- shaders
+|   |   |-- cursor.gdshader
+|   |   |-- fov_blur.gdshader
+|   |   |-- glass.gdshader
+|   |   |-- hot_air.gdshader
+|   |   `-- laser.gdshader
+|   |-- textures
+|   |   `-- bar_icon_health.tres
+|   `-- weapon_fx
+|       |-- hot_air_material.tres
+|       |-- hot_drop_material_3d.tres
+|       |-- laser_blast_decal.tscn
+|       |-- laser_material_3d.tres
+|       `-- laser_shader_material.tres
+|-- scenes
+|   |-- enemies
+|   |   |-- dummy.tscn
+|   |   `-- turret.tscn
+|   |-- fx
+|   |   |-- fov_visual.tscn
+|   |   `-- laser.tscn
+|   |-- main
+|   |-- misc
+|   |   |-- cursor.tscn
+|   |   `-- fov_sensor.tscn
+|   |-- player
+|   |   `-- vega.tscn
+|   |-- ui
+|   |   |-- bar.tscn
+|   |   `-- ui.tscn
+|   |-- weapons
+|   |   `-- BeamGun.tscn
+|   `-- world
+|       `-- 00_test_range
+|           `-- level.tscn
+|-- scripts
+|   |-- core
+|   |   |-- CameraManager.gd
+|   |   |-- EffectsManager.gd
+|   |   |-- Game.gd
+|   |   `-- WeaponController.gd
+|   |-- entities
+|   |   |-- Projectile.gd
+|   |   |-- Vega.gd
+|   |   |-- dummy.gd
+|   |   |-- turret.gd
+|   |   `-- weapons
+|   |       `-- BeamGun.gd
+|   |-- fx
+|   |   |-- FOV.gd
+|   |   |-- FOVVisual.gd
+|   |   |-- LaserBeam.gd
+|   |   `-- LaserBlastDecal.gd
+|   |-- ui
+|   |   |-- bar.gd
+|   |   `-- hud.gd
+|   |-- utils
+|   `-- world
+|       `-- FOVSensor.gd
+|-- shaders
+|-- tools
+`-- tree.txt
+
+40 directories, 84 files

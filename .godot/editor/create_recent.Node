@@ -1,3 +1,4 @@
+ResourcePreloader
 CanvasLayer
 Timer
 TextureRect
@@ -11,4 +12,3 @@ ColorRect
 HBoxContainer
 TextureProgressBar
 Label
-OmniLight3D
