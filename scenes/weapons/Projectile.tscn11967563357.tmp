@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://b3sw0mfw0j3pd"]
+
+[ext_resource type="Script" uid="uid://bphd78b852x5d" path="res://scripts/entities/Projectile.gd" id="1_mwr3u"]
+[ext_resource type="Material" uid="uid://dsgjm3te0v01d" path="res://resources/weapon_fx/laser_material_3d.tres" id="2_s52oo"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_rtdpv"]
+material = ExtResource("2_s52oo")
+size = Vector3(0.2, 0.5, 0.2)
+
+[node name="Projectile" type="Node3D"]
+script = ExtResource("1_mwr3u")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.25)
+mesh = SubResource("PrismMesh_rtdpv")

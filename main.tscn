@@ -52,6 +52,8 @@ mouse_filter = 1
 
 [node name="Entities" type="Node3D" parent="Game"]
 
+[node name="Projectiles" type="Node3D" parent="Game"]
+
 [node name="UI" parent="Game" instance=ExtResource("1_ig7tw")]
 
 [node name="Managers" type="Node" parent="."]

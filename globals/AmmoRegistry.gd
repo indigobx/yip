@@ -39,7 +39,7 @@ func parse_ammo_dict(dict: Dictionary) -> AmmoData:
   ammo.name = dict.get("name", "")
   ammo.speed = dict.get("speed", 0.0)
   ammo.mass = dict.get("mass", 0.0)
-  ammo.cross_section = dict.get("cross_section", 0.0)
+  ammo.caliber = dict.get("caliber", 0.0)
   ammo.drag_coef = dict.get("drag_coef", 0.0)
   ammo.stab_type = dict.get("stab_type", 0)
   ammo.has_thruster = dict.get("has_thruster", false)
@@ -48,7 +48,11 @@ func parse_ammo_dict(dict: Dictionary) -> AmmoData:
   ammo.burn_time = dict.get("burn_time", 0.0)
   ammo.core_mass = dict.get("core_mass", 0.0)
   ammo.core_hardness = dict.get("core_hardness", 1.0)
+  ammo.core_caliber = dict.get("core_caliber", 0.0)
   ammo.ricochet_min_angle = dict.get("ricochet_min_angle", 20.0)
   ammo.ricochet_max_angle = dict.get("ricochet_max_angle", 75.0)
 
   return ammo
+
+func get_ammo_by_name(name: String) -> AmmoData:
+  return ammo_dict.get(name, null)

@@ -1,6 +1,10 @@
+res://scenes/world/00_test_range
+res://scripts/world
 res://globals
-res://resources/weapons
+res://scripts/entities
+res://scripts/entities/weapons
 E:/Godot/yip/resources/weapons
+res://resources/weapons
 res://assets/ui
 res://resources/textures
 res://scripts/ui
@@ -8,15 +12,11 @@ res://scenes/ui
 res://resources/effects
 res://resources/shaders
 res://scripts/fx
-res://scripts/world
 res://scenes/misc
 res://scenes/fx
 res://resources/weapon_fx
-res://scripts/entities
 res://scenes/enemies
 res://assets/characters
 res://assets/characters/vega
 res://scripts/core
-res://scripts/entities/weapons
 res://scenes/world
-res://scenes/player

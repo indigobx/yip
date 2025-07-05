@@ -1,0 +1,18 @@
+weapons:
+  - name: "Glock17_HST"
+    mass: 0.625
+    barrel_length: 0.114
+    recoil_strength: 1.0
+    ammo_type: "9x19_HST_PlusP"
+
+  - name: "FN_EVOLYS"
+    mass: 6.0
+    barrel_length: 0.508
+    recoil_strength: 2.5
+    ammo_type: "7.62x51_SLAP_T"
+
+  - name: "SCAR_L_CQC"
+    mass: 3.5
+    barrel_length: 0.263
+    recoil_strength: 2.0
+    ammo_type: "5.56x45_M855"

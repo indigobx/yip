@@ -13,6 +13,7 @@ var hud: Control = null
 
 
 func _ready() -> void:
+  randomize()
   load_level("00_test_range")
   PlayerData.connect("die", _on_die)
 

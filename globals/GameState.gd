@@ -7,3 +7,12 @@ var vision_point := Vector3.ZERO
 var focus_point := Vector3.ZERO
 
 var debug_text := ""
+
+var env_conditions: Dictionary = {
+  "pressure": 1.000,  # atm
+  "gravity": 9.78863,  # Miami
+  "temperature": 22.0,  # Celsius
+  "atmosphere": "clean_air",
+  "wind_strength": 0.0,  # m/s
+  "wind_direction": Vector3.FORWARD
+}

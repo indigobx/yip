@@ -22,6 +22,8 @@ GameState="*res://globals/GameState.gd"
 PlayerData="*res://globals/PlayerData.gd"
 InputHandler="*res://globals/InputHandler.gd"
 AmmoRegistry="*res://globals/AmmoRegistry.gd"
+WeaponRegistry="*res://globals/WeaponRegistry.gd"
+Ballistics="*res://globals/Ballistics.gd"
 
 [display]
 

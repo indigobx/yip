@@ -7,7 +7,8 @@ signal energy_max_changed(new_max_enegy: float)
 signal damage_taken()
 signal die()
 
-var selected_weapon: PackedScene = preload("res://scenes/weapons/BeamGun.tscn")
+var selected_weapon: PackedScene = preload("res://scenes/weapons/Firearm.tscn")
+var selected_weapon_name:= "SCAR_L_CQC"
 var pregnancy_stage: int = 2
 var vega: Node3D
 var ev: float = 0.0
