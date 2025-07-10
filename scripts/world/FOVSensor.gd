@@ -49,7 +49,7 @@ func _on_body_exited(body: Node3D) -> void:
   detected_objects.erase(body)
 
 func get_visible_objects() -> Array:
-  var visible := []
+  var visible_objs := []
   var space_state = get_world_3d().direct_space_state
   var from = global_transform.origin
 
@@ -84,6 +84,6 @@ func get_visible_objects() -> Array:
     var result = space_state.intersect_ray(query)
 
     if result and result.collider == body:
-      visible.append(body)
+      visible_objs.append(body)
 
-  return visible
+  return visible_objs

@@ -32,7 +32,7 @@ ammo:
     ricochet_max_angle: 70.0
 
   - name: "5.56x45_M855"
-    speed: 12.000
+    speed: 922.000
     mass: 4.1
     caliber: 5.7
     drag_coef: 0.28

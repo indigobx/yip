@@ -7,10 +7,10 @@ var bar_scene = preload("res://scenes/ui/bar.tscn")
 func _ready() -> void:
   health_bar.type = "health"
   health_bar.value = 100.0
-  health_bar.max = 100.0
+  health_bar.maximum = 100.0
   energy_bar.type = "energy"
   energy_bar.value = 30.0
-  energy_bar.max = 400.0
+  energy_bar.maximum = 400.0
   $VBoxContainer.add_child(health_bar)
   $VBoxContainer.add_child(energy_bar)
   PlayerData.connect("health_changed", _on_health_changed)
@@ -22,7 +22,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-  pass
+  $VBoxContainer/TimeBar.value = Engine.time_scale
 
 func _on_health_changed(v) -> void:
   health_bar.value = v

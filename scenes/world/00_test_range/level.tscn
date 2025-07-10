@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bs8o1uhnwkovs"]
+[gd_scene load_steps=7 format=3 uid="uid://bs8o1uhnwkovs"]
 
 [ext_resource type="PackedScene" uid="uid://3mwscspo8fbr" path="res://assets/environments/test_range/test_range.blend" id="1_nkd1n"]
 [ext_resource type="PackedScene" uid="uid://ddsgb1ikxu5ph" path="res://resources/weapon_fx/laser_blast_decal.tscn" id="2_kvp7l"]
 [ext_resource type="PackedScene" uid="uid://ea4t8lrb5laj" path="res://scenes/enemies/dummy.tscn" id="3_41rvd"]
 [ext_resource type="PackedScene" uid="uid://dmotse4piwnuh" path="res://scenes/enemies/turret.tscn" id="4_ld2mo"]
 [ext_resource type="PackedScene" uid="uid://8v0k5ipdhtrk" path="res://scenes/world/00_test_range/target.tscn" id="5_fakir"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_fakir"]
+radius = 2.0
 
 [node name="Test_Range" type="Node3D"]
 
@@ -85,3 +88,11 @@ cooldown = 0.5
 
 [node name="Target" parent="." instance=ExtResource("5_fakir")]
 transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 19.5436, -9.53674e-07, -27.7128)
+
+[node name="Area3D" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.14387, 0, -22.7005)
+collision_layer = 512
+collision_mask = 512
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_fakir")

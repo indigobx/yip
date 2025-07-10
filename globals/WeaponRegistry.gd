@@ -20,27 +20,37 @@ func load_weapon_from_yaml():
   weapon_list.clear()
 
   for entry in entries:
-    var weapon = parse_weapon_dict(entry)
-    if weapon != null:
+    var weapon = _safe_parse_weapon(entry)
+    if weapon:
       weapon_dict[weapon.name] = weapon
       weapon_list.append(weapon)
-      
-  var out = "Loaded %s weapon data:" % len(weapon_list)
-  for w in weapon_list:
-    out += " %s," % w.name
-  print(out.substr(0, len(out)-1) + ".")
-      
+  
+  print_loaded_weapons()
 
-func parse_weapon_dict(dict: Dictionary) -> WeaponData:
+func _safe_parse_weapon(dict: Dictionary) -> WeaponData:
   var weapon = WeaponData.new()
-
+  
+  # Основные параметры
   weapon.name = dict.get("name", "")
   weapon.mass = dict.get("mass", 0.0)
   weapon.barrel_length = dict.get("barrel_length", 0.0)
   weapon.recoil_strength = dict.get("recoil_strength", 1.0)
   weapon.ammo_type = dict.get("ammo_type", "")
-
+  weapon.burst_rounds = dict.get("burst", 0)
+  weapon.has_safety = dict.get("has_safety", true)
+  
+  # Параметры fire_rate с защитой
+  var fire_rate = dict.get("fire_rate", {})
+  if fire_rate is Dictionary:
+    weapon.fire_rate_single = fire_rate.get("single", 0.0)
+    weapon.fire_rate_auto = fire_rate.get("auto", 0.0)
+    weapon.fire_rate_burst = fire_rate.get("burst", 0.0)
+  
   return weapon
 
-func get_weapon_by_name(name: String) -> WeaponData:
-  return weapon_dict.get(name, null)
+func print_loaded_weapons():
+  var names = weapon_list.map(func(w): return w.name)
+  print("Loaded weapons: ", ", ".join(names))
+
+func get_weapon_by_name(wname: String) -> WeaponData:
+  return weapon_dict.get(wname) as WeaponData

@@ -1,37 +1,133 @@
 extends Node3D
+class_name Firearm
 
-var effects_manager: Node
-var projectiles: Node
+# Режимы стрельбы
+enum FireMode {SAFE, SINGLE, BURST, AUTO}
+var current_mode: FireMode = FireMode.SINGLE
+var available_modes: Array[FireMode] = []
+
+# Ссылки
 var projectile = preload("res://scenes/weapons/Projectile.tscn")
 var weapon: WeaponData
 var ammo: AmmoData
 
+# Состояние
+var is_trigger_pressed := false
+var fire_timer := 0.0
+var burst_counter := 0
+var is_firing := false
+
 func _ready() -> void:
-#  InputHandler.connect("fire_pressed", Callable(self, "_on_fire_pressed"))
-#  InputHandler.connect("fire_released", Callable(self, "_on_fire_released"))
-  InputHandler.connect("fire_single", Callable(self, "_on_fire_single"))
-#  InputHandler.connect("fire_charge", Callable(self, "_on_fire_charge"))
-  effects_manager = get_tree().root.get_node("Main/Managers/EffectsManager")
-  projectiles = get_tree().root.get_node("Main/Game/Projectiles")
+  # Инициализация оружия
   weapon = WeaponRegistry.get_weapon_by_name(PlayerData.selected_weapon_name)
   ammo = AmmoRegistry.get_ammo_by_name(weapon.ammo_type)
+  
+  # Определение доступных режимов
+  _update_available_modes()
+  
+  # Подключение сигналов
+  InputHandler.fire_action.connect(_on_fire_action)
+  InputHandler.toggle_fire_mode.connect(_toggle_fire_mode)
+  
+  print("Firearm initialized. Mode: ", FireMode.keys()[current_mode])
 
-func _on_fire_single() -> void:
-  var from = GameState.gun_muzzle_pos
-  var to = GameState.cursor_world_pos
-  #var direction = (to - from).normalized()  # direct
-  var direction = Ballistics.get_aim_direction(from, to, ammo)
+func _process(delta):
+  if fire_timer > 0:
+    fire_timer -= delta
+  
+  _handle_firing(delta)
 
+func _handle_firing(_delta: float):
+  if !is_trigger_pressed or current_mode == FireMode.SAFE:
+    return
+  
+  match current_mode:
+    FireMode.AUTO:
+      if _can_fire():
+        _fire()
+        fire_timer = _get_fire_delay(weapon.fire_rate_auto)
+    
+    FireMode.BURST:
+      if burst_counter > 0 and _can_fire():
+        _fire()
+        burst_counter -= 1
+        fire_timer = _get_fire_delay(weapon.fire_rate_burst)
+        
+        if burst_counter <= 0:
+          is_trigger_pressed = false
 
-  var proj_instance = projectile.instantiate()
-  proj_instance.ammo = ammo
-  proj_instance.name = "%s_%s" % [
-    ammo.name,
-    str(randi()).md5_text()
-  ]
+func _on_fire_action(pressed: bool):
+  print("Fire action: ", "PRESSED" if pressed else "RELEASED")
+  is_trigger_pressed = pressed
+  
+  if !pressed:
+    return
+  
+  if current_mode == FireMode.SAFE:
+    print("Weapon is on SAFE")
+    return
+  
+  match current_mode:
+    FireMode.SINGLE:
+      if _can_fire():
+        _fire()
+        fire_timer = _get_fire_delay(weapon.fire_rate_single)
+    
+    FireMode.BURST:
+      burst_counter = weapon.burst_rounds if weapon.burst_rounds > 0 else 3
+      fire_timer = 0  # Сбрасываем таймер для немедленного выстрела
 
-  projectiles.add_child(proj_instance)
-  proj_instance.global_position = from
-  proj_instance.set_initial_direction(direction)
+func _toggle_fire_mode():
+  if available_modes.size() <= 1:
+    return
+  
+  var current_index = available_modes.find(current_mode)
+  var next_index = (current_index + 1) % available_modes.size()
+  current_mode = available_modes[next_index]
+  
+  print("Fire mode changed to: ", FireMode.keys()[current_mode])
+  burst_counter = 0
+  is_trigger_pressed = false
 
-  print("%s is firing %s" % [weapon.name, proj_instance.name])
+func _update_available_modes():
+  available_modes = []
+  
+  # Всегда добавляем SAFE если есть предохранитель
+  if weapon.has_safety: 
+    available_modes.append(FireMode.SAFE)
+  
+  # Добавляем доступные режимы стрельбы
+  if weapon.fire_rate_single > 0: 
+    available_modes.append(FireMode.SINGLE)
+  if weapon.fire_rate_burst > 0 and weapon.burst_rounds > 0: 
+    available_modes.append(FireMode.BURST)
+  if weapon.fire_rate_auto > 0: 
+    available_modes.append(FireMode.AUTO)
+  
+  # Если нет доступных режимов (кроме SAFE), добавляем SINGLE как fallback
+  if available_modes.size() == (1 if weapon.has_safety else 0):
+    available_modes.append(FireMode.SINGLE)
+  
+  # Устанавливаем первый доступный режим
+  if available_modes.size() > 0 and !available_modes.has(current_mode):
+    current_mode = available_modes[0]
+
+func _can_fire() -> bool:
+  return fire_timer <= 0 and !is_zero_approx(weapon.fire_rate_single)
+
+func _get_fire_delay(rpm: float) -> float:
+  return 60.0 / rpm if rpm > 0 else 0.1
+
+func _fire():
+  var proj = projectile.instantiate()
+  proj.ammo = ammo
+  
+  # Получаем ноду Projectiles безопасно
+  var projectiles_node = get_tree().root.get_node_or_null("Main/Game/Projectiles")
+  if projectiles_node:
+    projectiles_node.add_child(proj)
+    proj.global_position = global_position
+    proj.set_initial_direction(global_transform.basis.z)
+    print("Fired: ", weapon.name, " (", ammo.name, ")")
+  else:
+    push_error("Projectiles node not found!")

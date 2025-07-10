@@ -71,6 +71,8 @@ script = ExtResource("4_1bvp3")
 
 [node name="Decals" type="Node3D" parent="Managers/EffectsManager"]
 
+[node name="Markers" type="Node3D" parent="Managers/EffectsManager"]
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Managers/EffectsManager"]
 environment = ExtResource("8_5vw27")
 

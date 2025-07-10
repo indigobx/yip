@@ -9,10 +9,12 @@ var default_bindings := {
   "move_down": [KEY_S],
   "jump": [KEY_SPACE],
   "fire": [MOUSE_BUTTON_LEFT],
+  "alt_fire": [MOUSE_BUTTON_RIGHT],
   "interact": [KEY_E],
   "zoom_in": [MOUSE_BUTTON_WHEEL_UP],
   "zoom_out": [MOUSE_BUTTON_WHEEL_DOWN],
-  "night_vision": [KEY_N]
+  "night_vision": [KEY_N],
+  "toggle_fire_mode": [KEY_T]
 }
 
 func _ready():

@@ -8,7 +8,7 @@ material = ExtResource("2_s52oo")
 size = Vector3(0.2, 0.5, 0.2)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s52oo"]
-radius = 0.1
+radius = 0.05
 height = 0.5
 
 [node name="Projectile" type="Node3D"]
@@ -25,13 +25,10 @@ shadow_enabled = true
 shadow_bias = 0.01
 
 [node name="Area3D" type="Area3D" parent="."]
+monitorable = false
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="Collider" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, -0.2)
 shape = SubResource("CapsuleShape3D_s52oo")
 
-[node name="RayCast3D" type="RayCast3D" parent="."]
-target_position = Vector3(0, 0, -1)
-collide_with_areas = true
-collide_with_bodies = false
-debug_shape_custom_color = Color(0, 0.98, 0.539, 1)
+[node name="Debug" type="Node3D" parent="."]

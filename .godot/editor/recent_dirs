@@ -1,3 +1,6 @@
+res://assets/weapon_fx
+res://resources/weapon_fx
+res://scripts/fx
 res://scenes/world/00_test_range
 res://scripts/world
 res://globals
@@ -11,12 +14,9 @@ res://scripts/ui
 res://scenes/ui
 res://resources/effects
 res://resources/shaders
-res://scripts/fx
 res://scenes/misc
 res://scenes/fx
-res://resources/weapon_fx
 res://scenes/enemies
 res://assets/characters
 res://assets/characters/vega
 res://scripts/core
-res://scenes/world

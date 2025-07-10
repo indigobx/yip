@@ -6,6 +6,7 @@ const PLAYER_SCENE := preload("res://scenes/player/vega.tscn")
 @onready var entities: Node3D = $Entities
 @onready var ui: CanvasLayer = $UI
 @onready var camera_controller = get_node("../Managers/CameraController")
+@onready var fx = get_node("../Managers/EffectsManager")
 
 var current_level: Node3D = null
 var player: Node3D = null

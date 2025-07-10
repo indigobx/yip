@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://c6a4kcfxwitv4"]
+
+[sub_resource type="Gradient" id="Gradient_gwq85"]
+colors = PackedColorArray(0, 1, 0.35, 1, 0, 1, 0.35, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_4whak"]
+gradient = SubResource("Gradient_gwq85")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gwq85"]
+albedo_texture = SubResource("GradientTexture2D_4whak")
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_texture = SubResource("GradientTexture2D_4whak")
+
+[sub_resource type="QuadMesh" id="QuadMesh_gwq85"]
+material = SubResource("StandardMaterial3D_gwq85")
+size = Vector2(0.1, 0.1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("QuadMesh_gwq85")

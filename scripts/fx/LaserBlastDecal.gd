@@ -2,7 +2,7 @@ extends Decal
 
   
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
   if not $Timer.is_stopped():
     emission_energy = lerp(emission_energy, 0.0, 0.1)
 

@@ -54,5 +54,5 @@ func parse_ammo_dict(dict: Dictionary) -> AmmoData:
 
   return ammo
 
-func get_ammo_by_name(name: String) -> AmmoData:
-  return ammo_dict.get(name, null)
+func get_ammo_by_name(aname: String) -> AmmoData:
+  return ammo_dict.get(aname, null)

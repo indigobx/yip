@@ -1,94 +1,86 @@
 extends Node
 
-signal move_input(vector2)
+# Сигналы движения
+signal move_input(vector: Vector2)
 signal jump_pressed
-signal fire_pressed
-signal fire_released
-signal fire_single
-signal fire_charge
 signal interact_pressed
-signal zoom_in
-signal zoom_out
-signal cursor_updated(screen_pos: Vector2, world_pos: Vector3)
 signal night_vision_pressed
 
-var _fire_time_pressed := 0
-const CLICK_THRESHOLD_MS := 200
+# Сигналы стрельбы
+signal fire_action(pressed: bool)
+signal alt_fire_action(pressed: bool)
+signal toggle_fire_mode
 
-var _movement_vector := Vector2.ZERO
-var _camera: Camera3D = null
+# Сигналы камеры
+signal zoom_in
+signal zoom_out
 
-#@onready var debug_cursor := MeshInstance3D.new()
-@onready var cursor_scene = preload("res://scenes/misc/cursor.tscn")
-var cursor
+var _camera: Camera3D
 
+func _ready():
+  Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+  print_debug("InputHandler initialized")
 
-func set_camera(camera: Camera3D) -> void:
+func set_camera(camera: Camera3D):
   _camera = camera
+  print_debug("Camera set: ", camera.name if camera else "null")
 
-func _ready() -> void:
-  cursor = cursor_scene.instantiate()
-  add_child(cursor)
-
-
-func _process(_delta: float) -> void:
+func _process(_delta):
   _update_movement()
-  _update_cursor()
+  _update_cursor_state()
+  _handle_time_scale()
 
-func _update_movement() -> void:
-  var x = Input.get_action_strength("move_right") - Input.get_action_strength("move_left")
-  var y = Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
-  var new_vector = Vector2(x, y).normalized()
+func _unhandled_input(event):
+  # Обработка мыши
+  if event is InputEventMouseButton:
+    if event.button_index == MOUSE_BUTTON_LEFT:
+      fire_action.emit(event.pressed)
+      print_debug("Fire event: ", "PRESSED" if event.pressed else "RELEASED")
+    
+    if event.button_index == MOUSE_BUTTON_RIGHT:
+      alt_fire_action.emit(event.pressed)
+    
+    if event.pressed:
+      match event.button_index:
+        MOUSE_BUTTON_WHEEL_UP: zoom_in.emit()
+        MOUSE_BUTTON_WHEEL_DOWN: zoom_out.emit()
+  
+  # Обработка клавиатуры
+  if event.is_action_pressed("jump"): jump_pressed.emit()
+  if event.is_action_pressed("interact"): interact_pressed.emit()
+  if event.is_action_pressed("night_vision"): night_vision_pressed.emit()
+  if event.is_action_pressed("toggle_fire_mode"): toggle_fire_mode.emit()
 
-  if new_vector != _movement_vector:
-    _movement_vector = new_vector
-    emit_signal("move_input", _movement_vector)
+func _update_movement():
+  var input = Vector2(
+    Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+    Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
+  ).normalized()
+  move_input.emit(input)
 
-func _update_cursor() -> void:
-  if not _camera:
+func _update_cursor_state():
+  if !_camera:
     return
-
-  GameState.cursor_screen_pos = get_viewport().get_mouse_position()
-
-  var from = _camera.project_ray_origin(GameState.cursor_screen_pos)
-  var to = from + _camera.project_ray_normal(GameState.cursor_screen_pos) * 1000.0
-
-  var space_state = get_viewport().get_world_3d().direct_space_state
-  var query := PhysicsRayQueryParameters3D.create(from, to)
-  var result = space_state.intersect_ray(query)
-
+  
+  var mouse_pos = get_viewport().get_mouse_position()
+  GameState.cursor_screen_pos = mouse_pos
+  
+  var from = _camera.project_ray_origin(mouse_pos)
+  var to = from + _camera.project_ray_normal(mouse_pos) * 1000.0
+  
+  var result = get_viewport().get_world_3d().direct_space_state.intersect_ray(
+    PhysicsRayQueryParameters3D.create(from, to)
+  )
+  
   GameState.cursor_world_pos = result.position if result else to
   GameState.focus_point = GameState.cursor_world_pos
-  cursor.global_position = GameState.cursor_world_pos
-  emit_signal("cursor_updated", GameState.cursor_screen_pos, GameState.cursor_world_pos)
 
-func _unhandled_input(event: InputEvent) -> void:
-  if event.is_action_pressed("jump"):
-    emit_signal("jump_pressed")
-
-  if event.is_action_pressed("interact"):
-    emit_signal("interact_pressed")
-  
-  if event.is_action_pressed("night_vision"):
-    emit_signal("night_vision_pressed")
-
-  if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-    if event.pressed:
-      _fire_time_pressed = Time.get_ticks_msec()
-      emit_signal("fire_pressed")
-    else:
-      var duration = Time.get_ticks_msec() - _fire_time_pressed
-      emit_signal("fire_released")
-
-      if duration < CLICK_THRESHOLD_MS:
-        emit_signal("fire_single")
-      else:
-        emit_signal("fire_charge")
-
-  if event is InputEventMouseButton and event.pressed:
-    match event.button_index:
-      MOUSE_BUTTON_WHEEL_UP:
-        emit_signal("zoom_in")
-      MOUSE_BUTTON_WHEEL_DOWN:
-        emit_signal("zoom_out")
-    
+func _handle_time_scale():
+  if Input.is_action_pressed("ts_default"):
+    Engine.time_scale = 1.0
+  elif Input.is_action_pressed("ts_stop"):
+    Engine.time_scale = 0.0
+  elif Input.is_action_pressed("ts_plus"):
+    Engine.time_scale = min(Engine.time_scale + 0.01, 2.0)
+  elif Input.is_action_pressed("ts_minus"):
+    Engine.time_scale = max(Engine.time_scale - 0.01, 0.0)

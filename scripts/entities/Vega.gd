@@ -86,10 +86,10 @@ func angle_to_8dir(angle_deg: float) -> int:
   var sector := int(round(normalized / 45.0)) % 8
   return sector
 
-func play_animation(state: String, direction: int) -> void:
+func play_animation(st: String, direction: int) -> void:
   direction = clamp(direction, 0, 7)
   var stage = clamp(PlayerData.pregnancy_stage, 0, 5)
-  var anim_name := "%s_%d_%d" % [state, direction, stage]
+  var anim_name := "%s_%d_%d" % [st, direction, stage]
 
   if anim_name == _current_anim:
     return  # уже проигрывается, не перезапускать

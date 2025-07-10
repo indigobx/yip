@@ -1,0 +1,25 @@
+[gd_scene load_steps=7 format=3 uid="uid://0wg0wuqtywag"]
+
+[ext_resource type="Script" uid="uid://cv3dlovn1ervf" path="res://scripts/fx/BulletHoleDecal.gd" id="1_6ob62"]
+[ext_resource type="Texture2D" uid="uid://bp0wh05is8hc6" path="res://assets/weapon_fx/bullet_hole_556_emit.png" id="1_wcq65"]
+[ext_resource type="Texture2D" uid="uid://dogg83f0exw55" path="res://assets/weapon_fx/bullet_hole_556_01_albedo.png" id="2_kun5j"]
+[ext_resource type="Texture2D" uid="uid://mgd7g1bf81mt" path="res://assets/weapon_fx/bullet_hole_556_02_albedo.png" id="3_wcq65"]
+[ext_resource type="Texture2D" uid="uid://c2xsb7palvfym" path="res://assets/weapon_fx/bullet_hole_556_03_albedo.png" id="4_7ddh3"]
+[ext_resource type="Texture2D" uid="uid://d3hptru7fqf1k" path="res://assets/weapon_fx/bullet_hole_556_04_albedo.png" id="5_6m4p4"]
+
+[node name="Bullet_Hole_Decal" type="Decal"]
+size = Vector3(0.25, 0.25, 0.25)
+texture_emission = ExtResource("1_wcq65")
+emission_energy = 5.0
+albedo_mix = 0.75
+script = ExtResource("1_6ob62")
+
+[node name="ResourcePreloader" type="ResourcePreloader" parent="."]
+resources = [PackedStringArray("bullet_hole_556_01_albedo", "bullet_hole_556_02_albedo", "bullet_hole_556_03_albedo", "bullet_hole_556_04_albedo"), [ExtResource("2_kun5j"), ExtResource("3_wcq65"), ExtResource("4_7ddh3"), ExtResource("5_6m4p4")]]
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

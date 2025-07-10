@@ -55,9 +55,11 @@ script = ExtResource("1_movbt")
 mesh = SubResource("ArrayMesh_2vfyv")
 skeleton = NodePath("")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="A" type="Area3D" parent="."]
+collision_layer = 512
+collision_mask = 512
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CS" type="CollisionShape3D" parent="A"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.35, 0)
 shape = SubResource("CylinderShape3D_movbt")
 
@@ -65,5 +67,5 @@ shape = SubResource("CylinderShape3D_movbt")
 wait_time = 0.5
 one_shot = true
 
-[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="area_entered" from="A" to="." method="_on_area_3d_area_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

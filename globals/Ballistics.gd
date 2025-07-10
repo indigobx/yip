@@ -39,8 +39,15 @@ func update_projectile(projectile: Node3D, delta: float) -> void:
   projectile.global_position += velocity * delta
 
   # Ориентируем по траектории
-  if velocity.length() > 0.01:
-    projectile.look_at(projectile.global_position + velocity, Vector3.UP)
+  if velocity.length_squared() > 1.0:
+    var target_pos = projectile.global_position + velocity
+    var up_dir = Vector3.UP
+
+    # Проверка коллинеарности (если направление почти совпадает с "вверх")
+    if velocity.normalized().abs().dot(up_dir.abs()) > 0.99:
+        up_dir = Vector3.FORWARD  # Альтернативный вектор
+
+    projectile.look_at(target_pos, up_dir)
 
 # Расчёт точки попадания с учётом среды
 func get_hit_point(origin: Vector3, direction: Vector3, ammo: AmmoData, max_distance: float = 1000.0) -> Dictionary:

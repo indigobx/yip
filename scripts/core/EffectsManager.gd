@@ -1,6 +1,10 @@
 extends Node3D
 
-var max_decals = 300
+var max_decals = 300  # obsolete
+var max_fx = {
+  "decal": 300,
+  "marker": 100
+}
 @onready var cursor_tracker = PlayerData.vega.get_node("TrackCursor")
 @onready var exposure_camera = $ExposureViewport/ExposureMeter
 @onready var exposure_viewport = $ExposureViewport
@@ -9,7 +13,7 @@ func _ready() -> void:
   exposure_viewport.world_3d = get_world_3d()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
   _move_exposure_meter()
   _meter_exposure()
 
@@ -58,7 +62,7 @@ func _meter_exposure() -> void:
     return
 
   var average_luminance = luminance_sum / sample_count
-  var ev100 = log(average_luminance * 100.0 / 12.5) / log(2)
+  #var ev100 = log(average_luminance * 100.0 / 12.5) / log(2)
 
   var target_luminance = 1.0
   var exposure = log(target_luminance / (average_luminance + 0.001)) / log(2)
@@ -66,21 +70,59 @@ func _meter_exposure() -> void:
   #print("EV100: %.2f   EXP: %.2f" % [ev100, PlayerData.ev])
 
 
-func add_decal(decal, hit, scale:float=1.0) -> void:
+func add_decal(decal, hit, fx_scale:float=1.0) -> void:
   var decal_instance = decal.instantiate()
   $Decals.add_child(decal_instance)
-  decal_instance.scale = Vector3(scale, scale, scale)
-  decal_instance.global_position = hit.position
-  decal_instance.rotation = hit.position + hit.normal
+  decal_instance.scale = Vector3(fx_scale, fx_scale, fx_scale)
+  if hit is Dictionary:
+    decal_instance.global_position = hit.position
+    decal_instance.rotation = hit.position + hit.normal
+  else:
+    decal_instance.global_position = hit
+  print("add_decal is obsolete, use add_fx instead")
   cleanup_decals()
 
 
 func cleanup_decals() -> void:
   var decals_count = $Decals.get_child_count()
   if decals_count > max_decals:
-    var first_decal = $Decals.get_child(0)
-    first_decal.queue_free()
+    var decals = $Decals.get_children()
+    var to_remove = decals_count - max_decals
+    for i in range(to_remove):
+      decals[i].queue_free()
 
+
+func add_fx(where, what, pos, fx_scale=Vector3(1.0, 1.0, 1.0)) -> void:
+  var parent: Node
+  match where:
+    "decal":
+      parent = $Decals
+    "marker":
+      parent = $Markers
+    _:
+      return
+  var instance = what.instantiate()
+  parent.add_child(instance)
+  if fx_scale is Vector3:
+    instance.scale = scale
+  elif fx_scale is float or fx_scale is int:
+    instance.scale = Vector3(fx_scale, fx_scale, fx_scale)
+  else:
+    return
+  if pos is Dictionary:
+    instance.global_position = pos.position
+    instance.rotation = pos.position + pos.normal
+  else:
+    instance.global_position = pos
+  cleanup_fx(parent, max_fx[where])
+
+func cleanup_fx(parent, max) -> void:
+  var children_count = parent.get_child_count()
+  if children_count > max:
+    var children = parent.get_children()
+    var to_remove = children_count - max_decals
+    for i in range(to_remove):
+      children[i].queue_free()
 
 func set_glow(glow_params:Dictionary) -> void:
   if "intensity" in glow_params:

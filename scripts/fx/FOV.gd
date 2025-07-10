@@ -25,7 +25,7 @@ func _ready() -> void:
   _set_normal_vision()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
   var shader_material = $FovRect.material as ShaderMaterial
   var vision_screen_uv = camera.camera.unproject_position(GameState.vision_point)
   # unproject_position вернёт (x, y) в мировых координатах камеры, надо пересчитать в UV
