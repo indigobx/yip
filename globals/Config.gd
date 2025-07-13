@@ -17,6 +17,13 @@ var default_bindings := {
   "toggle_fire_mode": [KEY_T]
 }
 
+var max_ricochets: int = 3
+var max_fragmentations: int = 1
+var max_penetrations: int = 3
+var total_impacts_limit: int = 5
+var projectile_max_distance: float = 50.0
+var projectile_max_substeps: int = 900
+
 func _ready():
   load_controls()
 

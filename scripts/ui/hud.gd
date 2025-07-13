@@ -23,6 +23,7 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
   $VBoxContainer/TimeBar.value = Engine.time_scale
+  $VBoxContainer/Debug.text = "%s fps" % Engine.get_frames_per_second()
 
 func _on_health_changed(v) -> void:
   health_bar.value = v

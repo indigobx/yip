@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://bcspvren45htu"]
+[gd_scene load_steps=11 format=3 uid="uid://bcspvren45htu"]
 
 [ext_resource type="Script" uid="uid://x6tgpmlg5b5q" path="res://scripts/entities/Vega.gd" id="1_0d51e"]
 [ext_resource type="SpriteFrames" uid="uid://c5qju55ftiq23" path="res://resources/characters/vega.tres" id="2_7eycw"]
+[ext_resource type="Script" uid="uid://cjtngep4kfj0x" path="res://scripts/entities/weapons/Firearm.gd" id="3_teax5"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_x7p2l"]
 radius = 0.4
@@ -47,6 +48,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_x7p2l")
 
 [node name="Discrete" type="Node3D" parent="."]
+
+[node name="Weapon" type="Node3D" parent="Discrete"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12956, -0.894105)
+script = ExtResource("3_teax5")
 
 [node name="Muzzle" type="Marker3D" parent="Discrete"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13515, -0.880584)

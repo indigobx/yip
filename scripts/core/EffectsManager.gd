@@ -3,7 +3,7 @@ extends Node3D
 var max_decals = 300  # obsolete
 var max_fx = {
   "decal": 300,
-  "marker": 100
+  "marker": 600
 }
 @onready var cursor_tracker = PlayerData.vega.get_node("TrackCursor")
 @onready var exposure_camera = $ExposureViewport/ExposureMeter
@@ -91,16 +91,17 @@ func cleanup_decals() -> void:
     for i in range(to_remove):
       decals[i].queue_free()
 
-
-func add_fx(where, what, pos, fx_scale=Vector3(1.0, 1.0, 1.0)) -> void:
-  var parent: Node
-  match where:
+func _get_parent(parent_handle) -> Node:
+  var parent: Node = null
+  match parent_handle:
     "decal":
       parent = $Decals
     "marker":
       parent = $Markers
-    _:
-      return
+  return parent
+
+func add_fx(where, what, pos, fx_scale=Vector3(1.0, 1.0, 1.0)) -> void:
+  var parent = _get_parent(where)
   var instance = what.instantiate()
   parent.add_child(instance)
   if fx_scale is Vector3:
@@ -114,13 +115,17 @@ func add_fx(where, what, pos, fx_scale=Vector3(1.0, 1.0, 1.0)) -> void:
     instance.rotation = pos.position + pos.normal
   else:
     instance.global_position = pos
-  cleanup_fx(parent, max_fx[where])
+  cleanup_fx(where, max_fx[where])
 
-func cleanup_fx(parent, max) -> void:
+func cleanup_fx(where, max_items) -> void:
+  var parent = _get_parent(where)
   var children_count = parent.get_child_count()
-  if children_count > max:
+  if max_items == 0:
+    for node in parent.get_children():
+      node.queue_free()
+  if children_count > max_items:
     var children = parent.get_children()
-    var to_remove = children_count - max_decals
+    var to_remove = children_count - max_items
     for i in range(to_remove):
       children[i].queue_free()
 

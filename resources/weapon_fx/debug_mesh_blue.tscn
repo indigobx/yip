@@ -1,9 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://c6a4kcfxwitv4"]
+[gd_scene load_steps=5 format=3 uid="uid://c5xtva6yajgr4"]
 
 [sub_resource type="Gradient" id="Gradient_gwq85"]
-colors = PackedColorArray(0, 1, 0.35, 1, 0, 1, 0.35, 0)
+colors = PackedColorArray(0, 0.0333333, 1, 1, 0.0666666, 0, 1, 0)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_4whak"]
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_4m2k2"]
 gradient = SubResource("Gradient_gwq85")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
@@ -11,8 +11,7 @@ fill_to = Vector2(1, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gwq85"]
 shading_mode = 0
-albedo_texture = SubResource("GradientTexture2D_4whak")
-disable_receive_shadows = true
+albedo_texture = SubResource("GradientTexture2D_4m2k2")
 
 [sub_resource type="QuadMesh" id="QuadMesh_gwq85"]
 material = SubResource("StandardMaterial3D_gwq85")

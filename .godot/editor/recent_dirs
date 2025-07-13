@@ -1,11 +1,11 @@
+res://scripts/fx
+res://scripts/entities/weapons
 res://assets/weapon_fx
 res://resources/weapon_fx
-res://scripts/fx
 res://scenes/world/00_test_range
 res://scripts/world
 res://globals
 res://scripts/entities
-res://scripts/entities/weapons
 E:/Godot/yip/resources/weapons
 res://resources/weapons
 res://assets/ui

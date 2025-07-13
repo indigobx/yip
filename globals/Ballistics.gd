@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 
 # Обновление снаряда — один physics_step
 func update_projectile(projectile: Node3D, delta: float) -> void:
@@ -138,3 +138,19 @@ func get_aim_direction(from: Vector3, to: Vector3, ammo: AmmoData) -> Vector3:
 
   var corrected_to: Vector3 = to + Vector3.UP * drop
   return (corrected_to - from).normalized()
+
+func get_targets_in_radius(position: Vector3, radius: float) -> Array:
+  var space_state = get_world_3d().direct_space_state
+  var query = PhysicsShapeQueryParameters3D.new()
+  query.shape = SphereShape3D.new()
+  query.shape.radius = radius
+  query.transform = Transform3D.IDENTITY.translated(position)
+  return space_state.intersect_shape(query)
+
+func check_penetration(projectile: Projectile, target, hit_position: Vector3) -> bool:
+  if not target.has_method("get_armor_thickness"):
+    return false
+      
+  var armor_thickness = target.get_armor_thickness(hit_position)
+  var penetration_required = armor_thickness * (1.0 - projectile.ammo.damage_profile["armor_piercing"])
+  return projectile.ammo.penetration_power >= penetration_required

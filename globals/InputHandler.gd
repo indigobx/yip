@@ -35,7 +35,7 @@ func _unhandled_input(event):
   if event is InputEventMouseButton:
     if event.button_index == MOUSE_BUTTON_LEFT:
       fire_action.emit(event.pressed)
-      print_debug("Fire event: ", "PRESSED" if event.pressed else "RELEASED")
+      #print_debug("Fire event: ", "PRESSED" if event.pressed else "RELEASED")
     
     if event.button_index == MOUSE_BUTTON_RIGHT:
       alt_fire_action.emit(event.pressed)
@@ -74,6 +74,7 @@ func _update_cursor_state():
   
   GameState.cursor_world_pos = result.position if result else to
   GameState.focus_point = GameState.cursor_world_pos
+
 
 func _handle_time_scale():
   if Input.is_action_pressed("ts_default"):

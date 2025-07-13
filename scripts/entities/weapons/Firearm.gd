@@ -34,8 +34,11 @@ func _ready() -> void:
 func _process(delta):
   if fire_timer > 0:
     fire_timer -= delta
-  
+  _aim()
   _handle_firing(delta)
+
+func _aim() -> void:
+  look_at(GameState.cursor_world_pos)
 
 func _handle_firing(_delta: float):
   if !is_trigger_pressed or current_mode == FireMode.SAFE:
@@ -57,7 +60,7 @@ func _handle_firing(_delta: float):
           is_trigger_pressed = false
 
 func _on_fire_action(pressed: bool):
-  print("Fire action: ", "PRESSED" if pressed else "RELEASED")
+  #print("Fire action: ", "PRESSED" if pressed else "RELEASED")
   is_trigger_pressed = pressed
   
   if !pressed:
@@ -119,15 +122,25 @@ func _get_fire_delay(rpm: float) -> float:
   return 60.0 / rpm if rpm > 0 else 0.1
 
 func _fire():
+  # Проверяем, что ammo существует
+  if not ammo:
+    push_error("No ammo assigned to firearm!")
+    return
+
   var proj = projectile.instantiate()
-  proj.ammo = ammo
+  
+  # Создаем КОПИЮ данных боеприпаса
+  proj.ammo = ammo.duplicate(true)  # true для глубокого копирования
   
   # Получаем ноду Projectiles безопасно
   var projectiles_node = get_tree().root.get_node_or_null("Main/Game/Projectiles")
   if projectiles_node:
     projectiles_node.add_child(proj)
     proj.global_position = global_position
-    proj.set_initial_direction(global_transform.basis.z)
-    print("Fired: ", weapon.name, " (", ammo.name, ")")
+    proj.set_initial_direction(-global_transform.basis.z)
+    
+    # DEBUG: Проверяем, что ammo инициализирован корректно
+    if not proj.ammo or not proj.ammo.get("speed"):
+      push_error("Projectile created with invalid ammo data!")
   else:
     push_error("Projectiles node not found!")
