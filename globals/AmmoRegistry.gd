@@ -1,25 +1,30 @@
 extends Node
 
-const YAML_PATH := "res://resources/weapons/ammo_data.yaml"
+const JSON_PATH := "res://resources/weapons/ammo_data.json"
 var ammo_dict: Dictionary = {}
 var ammo_list: Array[AmmoData] = []
 
 func _ready():
-  load_ammo_from_yaml()
+  load_ammo_from_json()
   
-
-func load_ammo_from_yaml():
-  var result = YAML.load_file(YAML_PATH)
-  if result.has_error():
-    push_error("YAML parse error: %s" % result.get_error())
+func load_ammo_from_json():
+  var file = FileAccess.open(JSON_PATH, FileAccess.READ)
+  if file == null:
+    push_error("Failed to open ammo JSON file: %s" % FileAccess.get_open_error())
     return
-
-  var data = result.get_data()
+  
+  var json = JSON.new()
+  var parse_result = json.parse(file.get_as_text())
+  if parse_result != OK:
+    push_error("JSON parse error: %s" % json.get_error_message())
+    return
+  
+  var data = json.get_data()
   var entries: Array = data.get("ammo", [])
-
+  
   ammo_dict.clear()
   ammo_list.clear()
-
+  
   for entry in entries:
     var ammo = parse_ammo_dict(entry)
     if ammo != null:
@@ -30,6 +35,7 @@ func load_ammo_from_yaml():
   for a in ammo_list:
     out += " %s," % a.name
   print(out.substr(0, len(out)-1) + ".")
+
   
 
 func parse_ammo_dict(dict: Dictionary) -> AmmoData:

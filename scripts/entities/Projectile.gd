@@ -22,16 +22,88 @@ var ricochet_count: int = 0
 var fragmentation_count: int = 0
 var penetration_count: int = 0
 
+# Debug system
+var debug_id: String
+var parent_debug_id: String = ""
+var child_projectiles: Array = []
+var debug_data = {
+  "ammo_name": "",
+  "initial_position": Vector3.ZERO,
+  "substeps": []
+}
+
 func _ready() -> void:
   substeps = clamp(ceil(ammo.speed), 1, Config.projectile_max_substeps)
+  debug_id = "proj_%s_%s" % [ammo.name, Time.get_ticks_msec()]
+  _debug_save_init()
 
 func _debug() -> void:
-  print("impact %s\nricochet %s\nfragmentation %s\npenetration %s"
-    % [
-      impact_count, ricochet_count, fragmentation_count, penetration_count
-    ])
+  print("impact %s\nricochet %s\nfragmentation %s\npenetration %s" % [
+    impact_count, ricochet_count, fragmentation_count, penetration_count
+  ])
 
-      
+func _debug_save_init() -> void:
+  debug_data = {
+    "ammo_name": ammo.name,
+    "initial_position": {
+      "x": zero_position.x,
+      "y": zero_position.y,
+      "z": zero_position.z
+    },
+    "substeps": []
+  }
+
+func _debug_save_substep(step: int) -> void:
+  var substep_data = {
+    "step": step,
+    "position": {
+      "x": global_position.x,
+      "y": global_position.y,
+      "z": global_position.z
+    },
+    "velocity": {
+      "x": velocity.x,
+      "y": velocity.y,
+      "z": velocity.z
+    },
+    "distance": distance,
+    "id": debug_id,
+    "time": Time.get_unix_time_from_system(),
+    "physics_frame": Engine.get_physics_frames(),
+    "draw_frame": Engine.get_frames_drawn(),
+    "impact_count": impact_count,
+    "ricochet_count": ricochet_count,
+    "fragmentation_count": fragmentation_count,
+    "penetration_count": penetration_count,
+    "ammo_properties": {
+      "mass": ammo.mass,
+      "caliber": ammo.caliber,
+      "core_mass": ammo.core_mass,
+      "core_caliber": ammo.core_caliber,
+      "drag_coef": ammo.drag_coef
+    }
+  }
+  debug_data["substeps"].append(substep_data)
+
+func _debug_save_finalize() -> void:
+  var final_data = {
+    "id": debug_id,
+    "parent_id": parent_debug_id,
+    "ammo_data": debug_data,
+    "children": child_projectiles.map(func(p): return p.debug_id if is_instance_valid(p) else "")
+  }
+  
+  var file_path = "/Users/uzuri/Documents/Projects/yip-debug/data/%s-%s.json" % [debug_id, Time.get_unix_time_from_system()]
+  var file = FileAccess.open(file_path, FileAccess.WRITE)
+  if file:
+    file.store_string(JSON.stringify(final_data, "  "))
+    print("Saved debug data for ", debug_id)
+  else:
+    push_error("Failed to save debug data: ", FileAccess.get_open_error())
+  
+  for child in child_projectiles:
+    if is_instance_valid(child):
+      child._debug_save_finalize()
 
 func set_initial_direction(direction: Vector3) -> void:
   velocity = direction.normalized() * ammo.speed
@@ -41,16 +113,12 @@ func _physics_process(delta: float) -> void:
   var sub_delta = delta / substeps
   for i in range(substeps):
     total_substeps += 1
+    _debug_save_substep(i)
     if _simulate_substep(sub_delta):
-      return
+      break
   
-  var max_dist = Config.projectile_max_distance
-  if distance > max_dist:
-    queue_free()
-  
-  var max_substeps = Config.projectile_max_substeps
-  if total_substeps > max_substeps:
-    queue_free()
+  if distance > Config.projectile_max_distance or total_substeps > Config.projectile_max_substeps:
+    _die()
 
 func _simulate_substep(sub_delta: float) -> bool:
   Ballistics.update_projectile(self, sub_delta)
@@ -134,7 +202,7 @@ func _handle_explosion(pos: Vector3) -> void:
   if ammo.fragments_max > 0:
     _spawn_fragments(pos)
   
-  queue_free()
+  _die()
 
 func _spawn_fragments(pos: Vector3) -> void:
   var fragments_count = randi_range(ammo.fragments_min, ammo.fragments_max)
@@ -170,8 +238,6 @@ func _get_penetration_power() -> float:
 
 func _handle_penetration(hit_result: Dictionary) -> void:
   penetration_count += 1
-  
-  # Modify ammo properties for penetration
   ammo.caliber *= 1.1
   ammo.core_caliber *= 0.95
   ammo.mass *= 0.9
@@ -197,7 +263,6 @@ func _should_ricochet(hit_normal: Vector3) -> bool:
 func _handle_ricochet(hit_result: Dictionary) -> void:
   ricochet_count += 1
   apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
-  # Модифицируем параметры аммуниции
   ammo.caliber *= 1.1
   ammo.core_caliber *= 0.9
   ammo.mass *= 0.75
@@ -205,7 +270,7 @@ func _handle_ricochet(hit_result: Dictionary) -> void:
   var new_dir = velocity.normalized().bounce(hit_result["normal"])
   var new_proj = _spawn_new_projectile(hit_result["position"], new_dir, ammo.duplicate())
   new_proj.velocity = new_dir * velocity.length() * 0.5
-  queue_free()
+  _die()
 
 func _should_fragment() -> bool:
   return (ammo.fragmentation_chance > 0 and 
@@ -216,13 +281,13 @@ func _handle_fragmentation(hit_result: Dictionary) -> void:
   fragmentation_count += 1
   apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
   _spawn_fragments(hit_result["position"])
-  queue_free()
+  _die()
 
 func _finalize_impact(hit_result: Dictionary) -> void:
   apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
   if GameState.game and GameState.game.fx:
     GameState.game.fx.add_fx("decal", bullet_hole_scene, hit_result, randf_range(0.5, 1.5))
-  queue_free()
+  _die()
 
 func apply_damage(target, hit_position: Vector3, hit_normal: Vector3) -> void:
   var damage = _calculate_damage(hit_normal)
@@ -258,8 +323,9 @@ func _get_hit_type() -> String:
 func _spawn_new_projectile(pos: Vector3, dir: Vector3, new_ammo: AmmoData) -> Projectile:
   var new_proj = projectile_scene.instantiate()
   new_proj.ammo = new_ammo
+  new_proj.parent_debug_id = debug_id
+  child_projectiles.append(new_proj)
   
-  # Устанавливаем счетчики ДО добавления в сцену
   new_proj.impact_count = impact_count
   new_proj.ricochet_count = ricochet_count
   new_proj.fragmentation_count = fragmentation_count
@@ -271,3 +337,7 @@ func _spawn_new_projectile(pos: Vector3, dir: Vector3, new_ammo: AmmoData) -> Pr
     new_proj.global_position = pos
     new_proj.set_initial_direction(dir)
   return new_proj
+
+func _die() -> void:
+  _debug_save_finalize()
+  queue_free()

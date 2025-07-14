@@ -1,24 +1,30 @@
 extends Node
 
-const YAML_PATH := "res://resources/weapons/weapon_data.yaml"
+const JSON_PATH := "res://resources/weapons/weapon_data.json"
 var weapon_dict: Dictionary = {}
 var weapon_list: Array[WeaponData] = []
 
 func _ready():
-  load_weapon_from_yaml()
+  load_weapon_from_json()
 
-func load_weapon_from_yaml():
-  var result = YAML.load_file(YAML_PATH)
-  if result.has_error():
-    push_error("YAML parse error: %s" % result.get_error())
+func load_weapon_from_json():
+  var file = FileAccess.open(JSON_PATH, FileAccess.READ)
+  if file == null:
+    push_error("Failed to open weapon JSON file: %s" % FileAccess.get_open_error())
     return
-
-  var data = result.get_data()
+  
+  var json = JSON.new()
+  var parse_result = json.parse(file.get_as_text())
+  if parse_result != OK:
+    push_error("JSON parse error: %s" % json.get_error_message())
+    return
+  
+  var data = json.get_data()
   var entries: Array = data.get("weapons", [])
-
+  
   weapon_dict.clear()
   weapon_list.clear()
-
+  
   for entry in entries:
     var weapon = _safe_parse_weapon(entry)
     if weapon:
@@ -26,6 +32,7 @@ func load_weapon_from_yaml():
       weapon_list.append(weapon)
   
   print_loaded_weapons()
+
 
 func _safe_parse_weapon(dict: Dictionary) -> WeaponData:
   var weapon = WeaponData.new()
