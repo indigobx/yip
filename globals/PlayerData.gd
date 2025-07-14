@@ -10,8 +10,14 @@ signal die()
 var selected_weapon: PackedScene = preload("res://scenes/weapons/Firearm.tscn")
 var selected_weapon_name:= "SCAR_L_CQC"
 var pregnancy_stage: int = 2
+var base_weight: float = 58.0
+var weight: float = 58.0
 var vega: Node3D
 var ev: float = 0.0
+var skills: Dictionary = {
+  "weapon_handling": 5,
+  "recoil_resistance": 5
+}
 
 var _health: float = 100.0
 var _health_max: float = 100.0
@@ -42,6 +48,10 @@ var energy_max:
   set(v):
     _energy_max = v
     emit_signal("energy_max_changed", v)
+
+func _ready() -> void:
+  weight = base_weight + pregnancy_stage * 6.0
+
 
 func take_damage(damage) -> void:
   var new_health = clamp(health-damage, 0.0, health_max)

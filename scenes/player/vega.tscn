@@ -47,18 +47,24 @@ script = ExtResource("1_0d51e")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_x7p2l")
 
-[node name="Discrete" type="Node3D" parent="."]
-
-[node name="Weapon" type="Node3D" parent="Discrete"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.12956, -0.894105)
+[node name="Weapon" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13, 0)
 script = ExtResource("3_teax5")
 
-[node name="Muzzle" type="Marker3D" parent="Discrete"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.13515, -0.880584)
+[node name="WeaponBase" type="Node3D" parent="Weapon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.651923)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Discrete/Muzzle"]
+[node name="WeaponModel" type="MeshInstance3D" parent="Weapon/WeaponBase"]
+visible = false
+
+[node name="Muzzle" type="Marker3D" parent="Weapon/WeaponBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025809, -0.135341)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Weapon/WeaponBase/Muzzle"]
 visible = false
 mesh = SubResource("SphereMesh_teax5")
+
+[node name="Discrete" type="Node3D" parent="."]
 
 [node name="Geo" type="Node3D" parent="."]
 

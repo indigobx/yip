@@ -3,6 +3,7 @@ extends Control
 var bar_scene = preload("res://scenes/ui/bar.tscn")
 @onready var health_bar = bar_scene.instantiate()
 @onready var energy_bar = bar_scene.instantiate()
+@onready var recoil_bar = bar_scene.instantiate()
 
 func _ready() -> void:
   health_bar.type = "health"
@@ -11,8 +12,12 @@ func _ready() -> void:
   energy_bar.type = "energy"
   energy_bar.value = 30.0
   energy_bar.maximum = 400.0
+  recoil_bar.type = "charge"
+  recoil_bar.value = 0.0
+  recoil_bar.maximum = 90.0
   $VBoxContainer.add_child(health_bar)
   $VBoxContainer.add_child(energy_bar)
+  $VBoxContainer.add_child(recoil_bar)
   PlayerData.connect("health_changed", _on_health_changed)
   PlayerData.connect("health_max_changed", _on_health_max_changed)
   PlayerData.connect("energy_changed", _on_energy_changed)

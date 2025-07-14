@@ -10,7 +10,7 @@ const PLAYER_SCENE := preload("res://scenes/player/vega.tscn")
 
 var current_level: Node3D = null
 var player: Node3D = null
-var hud: Control = null
+@onready var hud: Control = ui.get_node_or_null("HUD")
 
 
 func _ready() -> void:

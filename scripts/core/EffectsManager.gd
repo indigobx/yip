@@ -8,6 +8,7 @@ var max_fx = {
 @onready var cursor_tracker = PlayerData.vega.get_node("TrackCursor")
 @onready var exposure_camera = $ExposureViewport/ExposureMeter
 @onready var exposure_viewport = $ExposureViewport
+var damage_text_scene = preload("res://scenes/ui/damage_text.tscn")
 
 func _ready() -> void:
   exposure_viewport.world_3d = get_world_3d()
@@ -16,6 +17,16 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
   _move_exposure_meter()
   _meter_exposure()
+
+
+func show_damage(hit_position: Vector3, amount: float, hit_type: String, is_critical: bool) -> void:
+    var camera = get_viewport().get_camera_3d()
+    var screen_pos = camera.unproject_position(hit_position)
+    
+    var text = damage_text_scene.instantiate()
+    add_child(text)
+    text.position = screen_pos
+    text.setup(amount, is_critical, hit_type)
 
 
 func _move_exposure_meter() -> void:

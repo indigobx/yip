@@ -50,6 +50,16 @@ shadow_enabled = true
 omni_range = 25.0
 omni_attenuation = 2.0
 
+[node name="OmniLight3D5" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.9927, 3.41105, -16.789)
+layers = 3
+light_color = Color(1, 0.955667, 0.81, 1)
+light_energy = 0.5
+light_size = 0.2
+shadow_enabled = true
+omni_range = 25.0
+omni_attenuation = 2.0
+
 [node name="OmniLight3D3" type="OmniLight3D" parent="Lights"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.9203, 3.41105, -27.9646)
 layers = 3
@@ -91,6 +101,7 @@ transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 
 
 [node name="Area3D" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.14387, 0, -22.7005)
+visible = false
 collision_layer = 512
 collision_mask = 512
 

@@ -34,7 +34,7 @@ func _safe_parse_weapon(dict: Dictionary) -> WeaponData:
   weapon.name = dict.get("name", "")
   weapon.mass = dict.get("mass", 0.0)
   weapon.barrel_length = dict.get("barrel_length", 0.0)
-  weapon.recoil_strength = dict.get("recoil_strength", 1.0)
+  weapon.spread_moa = dict.get("spread_moa", 4.0)
   weapon.ammo_type = dict.get("ammo_type", "")
   weapon.burst_rounds = dict.get("burst", 0)
   weapon.has_safety = dict.get("has_safety", true)

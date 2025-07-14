@@ -8,6 +8,9 @@ var available_modes: Array[FireMode] = []
 
 # Ссылки
 var projectile = preload("res://scenes/weapons/Projectile.tscn")
+@onready var weapon_base: Node3D = $WeaponBase
+@onready var weapon_model: MeshInstance3D = $WeaponBase/WeaponModel
+@onready var muzzle: Marker3D = $WeaponBase/Muzzle
 var weapon: WeaponData
 var ammo: AmmoData
 
@@ -16,6 +19,16 @@ var is_trigger_pressed := false
 var fire_timer := 0.0
 var burst_counter := 0
 var is_firing := false
+var current_spread_multiplier := 1.0
+var spread_multiplier_per_shot := 1.5
+var max_spread_multiplier := 0.0
+var spread_multiplier_recovery := 0.5
+# Настройки отдачи
+var recoil_offset := Vector3.ZERO
+var target_recoil_offset := Vector3.ZERO
+var recoil_rotation := Vector3.ZERO
+var target_recoil_rotation := Vector3.ZERO
+
 
 func _ready() -> void:
   # Инициализация оружия
@@ -36,9 +49,14 @@ func _process(delta):
     fire_timer -= delta
   _aim()
   _handle_firing(delta)
+  if current_spread_multiplier > 1.0:
+    current_spread_multiplier = max(1.0, current_spread_multiplier - delta * spread_multiplier_recovery)
+  _update_recoil(delta)
+
 
 func _aim() -> void:
-  look_at(GameState.cursor_world_pos)
+  # Поворот всего оружия (Weapon) для прицеливания
+  look_at(GameState.cursor_world_pos, Vector3.UP)
 
 func _handle_firing(_delta: float):
   if !is_trigger_pressed or current_mode == FireMode.SAFE:
@@ -121,26 +139,122 @@ func _can_fire() -> bool:
 func _get_fire_delay(rpm: float) -> float:
   return 60.0 / rpm if rpm > 0 else 0.1
 
+
+func _calculate_spread_angle() -> float:
+  # Учитываем множитель текущего разброса
+  return deg_to_rad((weapon.spread_moa + ammo.spread_moa) / 60.0) * current_spread_multiplier
+
+
+func _apply_spread(base_direction: Vector3) -> Vector3:
+  var spread_angle = _calculate_spread_angle()
+  
+  # Используем нормальное распределение для более реалистичного разброса
+  var angle_x = _gaussian_random(0, spread_angle/3.0)
+  var angle_y = _gaussian_random(0, spread_angle/3.0)
+  
+  var spread_transform = Transform3D()
+  spread_transform = spread_transform.rotated(global_transform.basis.x, angle_y)
+  spread_transform = spread_transform.rotated(global_transform.basis.y, angle_x)
+  
+  return (spread_transform * base_direction).normalized()
+
+func _gaussian_random(mean: float, deviation: float) -> float:
+  # Генерация случайного числа с нормальным распределением
+  var u1 := 1.0 - randf()
+  var u2 := 1.0 - randf()
+  var z0 := sqrt(-2.0 * log(u1)) * cos(2.0 * PI * u2)
+  return z0 * deviation + mean
+
+func _calculate_recoil_power() -> float:
+  var bullet_energy = 0.5 * ammo.mass * pow(ammo.speed, 2)
+  var base_power = bullet_energy * 0.0002
+  var skill_level = min(PlayerData.skills["recoil_resistance"], 20)
+  var skill_factor = 1.0 - pow(skill_level / 20.0, 0.4)  # Более плавное уменьшение
+  return base_power * skill_factor
+
+func _get_vertical_multiplier(skill: int) -> float:
+  # 1.5 на 0 уровне, снижается до 0.1 на 20 уровне
+  return clamp(1.5 - (1.4 * pow(skill / 20.0, 0.5)), 0.1, 1.5)
+
+func _get_horizontal_multiplier(skill: int) -> float:
+  # 1.3 на 0 уровне, снижается до 0.05 на 20 уровне
+  return clamp(1.3 - (1.25 * pow(skill / 20.0, 0.6)), 0.05, 1.3)
+
+func _apply_recoil():
+  var power = _calculate_recoil_power()
+  var skill = min(PlayerData.skills["recoil_resistance"], 20)
+  
+  var vertical = power * _get_vertical_multiplier(skill)
+  var horizontal = power * randf_range(-0.4, 0.4) * _get_horizontal_multiplier(skill)
+  
+  # Исправленное направление отдачи (теперь вверх)
+  target_recoil_offset += Vector3(
+    clamp(horizontal, -Config.max_recoil_offset.x, Config.max_recoil_offset.x),
+    clamp(vertical * 0.8, 0, Config.max_recoil_offset.y),  # Только вверх
+    clamp(-vertical * 0.2, -Config.max_recoil_offset.z, 0) # Слабый отброс назад
+  )
+  
+  target_recoil_rotation += Vector3(
+    clamp(-vertical * 0.5, -Config.max_recoil_rotation.x, 0),  # Наклон назад
+    clamp(horizontal * 1.2, -Config.max_recoil_rotation.y, Config.max_recoil_rotation.y),
+    0
+  )
+
+func _update_recoil(delta: float):
+  var recovery_speed = 3.0 + (PlayerData.skills["weapon_handling"] * 0.3)
+  
+  weapon_base.position = weapon_base.position.lerp(
+    Vector3(0, 0, -0.652) + target_recoil_offset,
+    recovery_speed * delta
+  )
+  
+  weapon_base.rotation = weapon_base.rotation.lerp(
+    -target_recoil_rotation,
+    recovery_speed * delta
+  )
+  
+  target_recoil_offset = target_recoil_offset.lerp(
+    Vector3.ZERO,
+    recovery_speed * delta * 0.6
+  )
+  
+  target_recoil_rotation = target_recoil_rotation.lerp(
+    Vector3.ZERO,
+    recovery_speed * delta * 0.6
+  )
+  if GameState.game.hud:
+    GameState.game.hud.recoil_bar.value = weapon_base.rotation_degrees.x
+
 func _fire():
-  # Проверяем, что ammo существует
   if not ammo:
     push_error("No ammo assigned to firearm!")
     return
 
   var proj = projectile.instantiate()
+  proj.ammo = ammo.duplicate(true)
   
-  # Создаем КОПИЮ данных боеприпаса
-  proj.ammo = ammo.duplicate(true)  # true для глубокого копирования
+  # Разброс
+  current_spread_multiplier = min(
+    current_spread_multiplier + spread_multiplier_per_shot, 
+    max_spread_multiplier
+  )
   
-  # Получаем ноду Projectiles безопасно
+  # Выстрел из позиции muzzle с учетом его локальных координат
+  var base_direction = -muzzle.global_transform.basis.z
+  var spread_direction = _apply_spread(base_direction)
+  
   var projectiles_node = get_tree().root.get_node_or_null("Main/Game/Projectiles")
   if projectiles_node:
     projectiles_node.add_child(proj)
-    proj.global_position = global_position
-    proj.set_initial_direction(-global_transform.basis.z)
-    
-    # DEBUG: Проверяем, что ammo инициализирован корректно
-    if not proj.ammo or not proj.ammo.get("speed"):
-      push_error("Projectile created with invalid ammo data!")
-  else:
-    push_error("Projectiles node not found!")
+    proj.global_position = muzzle.global_position
+    proj.set_initial_direction(spread_direction)
+  
+  _apply_recoil()
+  
+  # Визуальные эффекты
+  #if GameState.game and GameState.game.fx:
+    #GameState.game.fx.add_muzzle_flash(muzzle.global_transform)
+  
+  # Анимация выстрела
+  #if $AnimationPlayer.has_animation("fire"):
+    #$AnimationPlayer.play("fire")

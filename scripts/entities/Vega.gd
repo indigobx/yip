@@ -46,7 +46,7 @@ func _rotate_tracker() -> void:
   $TrackCursor.look_at(GameState.cursor_world_pos)
 
 func _update_pos() -> void:
-  GameState.gun_muzzle_pos = $Discrete/Muzzle.global_position
+  GameState.gun_muzzle_pos = $Weapon/WeaponBase/Muzzle.global_position
   GameState.vision_point = global_position# + Vector3(0.0, 1.8, 0.0)
 
 func _on_move_input(vec: Vector2) -> void:

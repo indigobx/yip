@@ -222,10 +222,8 @@ theme_override_constants/margin_right = 8
 [node name="IconSprite" type="AnimatedSprite2D" parent="Icon"]
 position = Vector2(12, 12)
 sprite_frames = SubResource("SpriteFrames_ts0vk")
-animation = &"data"
+animation = &"charge"
 autoplay = "health"
-frame = 1
-frame_progress = 0.151805
 
 [node name="ValueBar" type="ProgressBar" parent="."]
 custom_minimum_size = Vector2(400, 16)

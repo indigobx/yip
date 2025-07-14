@@ -178,7 +178,7 @@ func _handle_penetration(hit_result: Dictionary) -> void:
   ammo.core_mass *= 0.95
   
   global_position = hit_result["position"] + velocity.normalized() * 0.1
-  _apply_energy_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
+  apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
   velocity *= 0.8
 
 func _should_ricochet(hit_normal: Vector3) -> bool:
@@ -196,6 +196,7 @@ func _should_ricochet(hit_normal: Vector3) -> bool:
 
 func _handle_ricochet(hit_result: Dictionary) -> void:
   ricochet_count += 1
+  apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
   # Модифицируем параметры аммуниции
   ammo.caliber *= 1.1
   ammo.core_caliber *= 0.9
@@ -213,25 +214,46 @@ func _should_fragment() -> bool:
 
 func _handle_fragmentation(hit_result: Dictionary) -> void:
   fragmentation_count += 1
+  apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
   _spawn_fragments(hit_result["position"])
   queue_free()
 
 func _finalize_impact(hit_result: Dictionary) -> void:
-  _apply_energy_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
+  apply_damage(hit_result["collider"], hit_result["position"], hit_result["normal"])
   if GameState.game and GameState.game.fx:
     GameState.game.fx.add_fx("decal", bullet_hole_scene, hit_result, randf_range(0.5, 1.5))
   queue_free()
 
-func _apply_energy_damage(target, hit_position: Vector3, hit_normal: Vector3) -> void:
-  if target.has_method("take_energy_damage"):
-    var energy = _calculate_impact_energy(hit_normal)
-    target.take_energy_damage(energy, hit_position)
+func apply_damage(target, hit_position: Vector3, hit_normal: Vector3) -> void:
+  var damage = _calculate_damage(hit_normal)
+  var hit_type = _get_hit_type()
+  var is_target = target.has_method("take_damage")
+  
+  if GameState.game and GameState.game.fx:
+    GameState.game.fx.show_damage(
+      hit_position,
+      damage,
+      hit_type,
+      is_target
+    )
+  
+  if is_target:
+    target.take_damage(damage)
 
-func _calculate_impact_energy(hit_normal: Vector3) -> float:
+func _calculate_damage(hit_normal: Vector3) -> float:
   var kinetic_energy = 0.5 * ammo.mass * velocity.length_squared()
   var angle_factor = abs(hit_normal.dot(-velocity.normalized()))
-  var distance_factor = min(1.0, 1.0 - distance / (ammo.effective_range if ammo.has("effective_range") else 2000.0))
+  var distance_factor = min(1.0, 1.0 - distance / (ammo.effective_range if "effective_range" in ammo else 2000.0))
   return kinetic_energy * angle_factor * distance_factor
+
+func _get_hit_type() -> String:
+  if penetration_count > 0:
+    return "penetration"
+  if ricochet_count > 0:
+    return "ricochet"
+  if fragmentation_count > 0:
+    return "fragmentation"
+  return "normal"
 
 func _spawn_new_projectile(pos: Vector3, dir: Vector3, new_ammo: AmmoData) -> Projectile:
   var new_proj = projectile_scene.instantiate()
