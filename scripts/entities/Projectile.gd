@@ -23,39 +23,28 @@ var fragmentation_count: int = 0
 var penetration_count: int = 0
 
 # Debug system
-var debug_id: String
-var parent_debug_id: String = ""
-var child_projectiles: Array = []
 var debug_data = {
-  "ammo_name": "",
-  "initial_position": Vector3.ZERO,
-  "substeps": []
+  "kind": "projectile",
+  "data": []
 }
+@onready var debug_id = "%s_%s_%s" % [
+  Engine.get_frames_drawn(),
+  Engine.get_physics_frames(),
+  Engine.get_process_frames()
+  ]
 
 func _ready() -> void:
   substeps = clamp(ceil(ammo.speed), 1, Config.projectile_max_substeps)
-  debug_id = "proj_%s_%s" % [ammo.name, Time.get_ticks_msec()]
-  _debug_save_init()
 
 func _debug() -> void:
   print("impact %s\nricochet %s\nfragmentation %s\npenetration %s" % [
     impact_count, ricochet_count, fragmentation_count, penetration_count
   ])
 
-func _debug_save_init() -> void:
-  debug_data = {
-    "ammo_name": ammo.name,
-    "initial_position": {
-      "x": zero_position.x,
-      "y": zero_position.y,
-      "z": zero_position.z
-    },
-    "substeps": []
-  }
 
-func _debug_save_substep(step: int) -> void:
+func _debug_send() -> void:
   var substep_data = {
-    "step": step,
+    "total_substeps": total_substeps,
     "position": {
       "x": global_position.x,
       "y": global_position.y,
@@ -83,27 +72,7 @@ func _debug_save_substep(step: int) -> void:
       "drag_coef": ammo.drag_coef
     }
   }
-  debug_data["substeps"].append(substep_data)
-
-func _debug_save_finalize() -> void:
-  var final_data = {
-    "id": debug_id,
-    "parent_id": parent_debug_id,
-    "ammo_data": debug_data,
-    "children": child_projectiles.map(func(p): return p.debug_id if is_instance_valid(p) else "")
-  }
-  
-  var file_path = "/Users/uzuri/Documents/Projects/yip-debug/data/%s-%s.json" % [debug_id, Time.get_unix_time_from_system()]
-  var file = FileAccess.open(file_path, FileAccess.WRITE)
-  if file:
-    file.store_string(JSON.stringify(final_data, "  "))
-    print("Saved debug data for ", debug_id)
-  else:
-    push_error("Failed to save debug data: ", FileAccess.get_open_error())
-  
-  for child in child_projectiles:
-    if is_instance_valid(child):
-      child._debug_save_finalize()
+  debug_data["data"].append(substep_data)
 
 func set_initial_direction(direction: Vector3) -> void:
   velocity = direction.normalized() * ammo.speed
@@ -113,7 +82,6 @@ func _physics_process(delta: float) -> void:
   var sub_delta = delta / substeps
   for i in range(substeps):
     total_substeps += 1
-    _debug_save_substep(i)
     if _simulate_substep(sub_delta):
       break
   
@@ -138,6 +106,8 @@ func _simulate_substep(sub_delta: float) -> bool:
     return true
 
   global_position = to
+  _debug_send()
+  
   if GameState.game and GameState.game.fx:
     var sc = debug_marker_scene
     if ricochet_count > 0:
@@ -323,8 +293,6 @@ func _get_hit_type() -> String:
 func _spawn_new_projectile(pos: Vector3, dir: Vector3, new_ammo: AmmoData) -> Projectile:
   var new_proj = projectile_scene.instantiate()
   new_proj.ammo = new_ammo
-  new_proj.parent_debug_id = debug_id
-  child_projectiles.append(new_proj)
   
   new_proj.impact_count = impact_count
   new_proj.ricochet_count = ricochet_count
@@ -339,5 +307,5 @@ func _spawn_new_projectile(pos: Vector3, dir: Vector3, new_ammo: AmmoData) -> Pr
   return new_proj
 
 func _die() -> void:
-  _debug_save_finalize()
+  GameState.game.debug_send(debug_data)
   queue_free()

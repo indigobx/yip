@@ -58,4 +58,19 @@ func _on_die() -> void:
   PlayerData.health = PlayerData.health_max
   PlayerData.energy = 0.0
   
+func debug_send(data) -> void:
+  var json = JSON.stringify(data)
+  var headers = ["Content-Type: application/json"]
   
+  var http := HTTPRequest.new()
+  add_child(http)
+  http.request_completed.connect(
+    func(result, code, headers, body):
+      print("Завершено:", code)
+      http.queue_free()
+  )
+  
+  var err = http.request(Config.debug_url, headers, HTTPClient.METHOD_POST, json)
+  if err != OK:
+    print("Ошибка отправки:", err)
+    http.queue_free()

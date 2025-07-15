@@ -6,13 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://dmotse4piwnuh" path="res://scenes/enemies/turret.tscn" id="4_ld2mo"]
 [ext_resource type="PackedScene" uid="uid://8v0k5ipdhtrk" path="res://scenes/world/00_test_range/target.tscn" id="5_fakir"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_fakir"]
-radius = 2.0
+[sub_resource type="BoxShape3D" id="BoxShape3D_fakir"]
+size = Vector3(50, 2, 50)
 
 [node name="Test_Range" type="Node3D"]
 
 [node name="test_range" parent="." instance=ExtResource("1_nkd1n")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 10, 0, -10)
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 10, 10, 0)
@@ -22,7 +22,7 @@ fov = 56.4
 [node name="Lights" type="Node3D" parent="."]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Lights"]
-transform = Transform3D(-0.965032, -0.262004, 0.00820607, -0.182628, 0.694468, 0.695961, -0.188043, 0.670126, -0.718033, 8.835, 3.99, -15.548)
+transform = Transform3D(-0.965032, -0.262004, 0.00820607, -0.182628, 0.694468, 0.695961, -0.188043, 0.670126, -0.718033, -6.29326, 3.99, -2.0213)
 visible = false
 layers = 3
 light_energy = 0.05
@@ -32,7 +32,7 @@ light_bake_mode = 1
 shadow_enabled = true
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.6483, 3.41105, -8.35346)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0178, 3.41105, 2.19572)
 layers = 3
 light_color = Color(1, 0.22, 0.22, 1)
 light_size = 0.2
@@ -41,7 +41,7 @@ omni_range = 25.0
 omni_attenuation = 2.0
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.34093, 3.41105, -12.8817)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.959219, 3.41105, 10.8293)
 layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
 light_energy = 10.0
@@ -51,7 +51,7 @@ omni_range = 25.0
 omni_attenuation = 2.0
 
 [node name="OmniLight3D5" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 46.9927, 3.41105, -16.789)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.8644, 3.41105, -3.2623)
 layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
 light_energy = 0.5
@@ -61,7 +61,7 @@ omni_range = 25.0
 omni_attenuation = 2.0
 
 [node name="OmniLight3D3" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.9203, 3.41105, -27.9646)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.79204, 3.41105, -14.4379)
 layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
 light_size = 0.2
@@ -70,7 +70,7 @@ omni_range = 25.0
 omni_attenuation = 2.0
 
 [node name="OmniLight3D4" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.54861, 3.41105, 35.3803)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.39837, 3.41105, 45.4129)
 layers = 3
 light_color = Color(1, 0.955667, 0.81, 1)
 light_size = 0.2
@@ -81,29 +81,29 @@ omni_attenuation = 2.0
 [node name="Markers" type="Node3D" parent="."]
 
 [node name="PlayerSpawn" type="Marker3D" parent="Markers"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.63178, 0, -14.5596)
 
 [node name="LaserBlast" parent="." instance=ExtResource("2_kvp7l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 10)
 layers = 3
 
 [node name="Dummy" parent="." instance=ExtResource("3_41rvd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.1595, 0, -30.9144)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1595, 0, -20.9144)
 
 [node name="Turret" parent="." instance=ExtResource("4_ld2mo")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 54.5371, 1.90735e-06, -24.7566)
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 44.5371, 1.90735e-06, -14.7566)
 angle_a = -15.0
 angle_b = 15.0
 aim_speed = 90.0
 cooldown = 0.5
 
 [node name="Target" parent="." instance=ExtResource("5_fakir")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 19.5436, -9.53674e-07, -27.7128)
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 9.5436, -9.53674e-07, -17.7128)
 
 [node name="Area3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.14387, 0, -22.7005)
-visible = false
-collision_layer = 512
-collision_mask = 512
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.635, 4, -7.242)
+collision_layer = 513
+collision_mask = 513
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-shape = SubResource("SphereShape3D_fakir")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_fakir")
