@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bs8o1uhnwkovs"]
+[gd_scene load_steps=9 format=3 uid="uid://bs8o1uhnwkovs"]
 
 [ext_resource type="PackedScene" uid="uid://3mwscspo8fbr" path="res://assets/environments/test_range/test_range.blend" id="1_nkd1n"]
 [ext_resource type="PackedScene" uid="uid://ddsgb1ikxu5ph" path="res://resources/weapon_fx/laser_blast_decal.tscn" id="2_kvp7l"]
@@ -6,13 +6,22 @@
 [ext_resource type="PackedScene" uid="uid://dmotse4piwnuh" path="res://scenes/enemies/turret.tscn" id="4_ld2mo"]
 [ext_resource type="PackedScene" uid="uid://8v0k5ipdhtrk" path="res://scenes/world/00_test_range/target.tscn" id="5_fakir"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fakir"]
+shading_mode = 0
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_at58p"]
+material = SubResource("StandardMaterial3D_fakir")
+radius = 0.1
+height = 0.2
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_fakir"]
 size = Vector3(50, 2, 50)
 
 [node name="Test_Range" type="Node3D"]
 
 [node name="test_range" parent="." instance=ExtResource("1_nkd1n")]
-transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 0, 0, 0)
+transform = Transform3D(0.707107, 0, -0.707107, 0, 1, 0, 0.707107, 0, 0.707107, 1.44954, 0, 0)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 10, 10, 0)
@@ -81,6 +90,10 @@ omni_attenuation = 2.0
 [node name="Markers" type="Node3D" parent="."]
 
 [node name="PlayerSpawn" type="Marker3D" parent="Markers"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Markers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, -12.516)
+mesh = SubResource("SphereMesh_at58p")
 
 [node name="LaserBlast" parent="." instance=ExtResource("2_kvp7l")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 10)

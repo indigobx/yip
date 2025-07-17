@@ -46,6 +46,12 @@ func _safe_parse_weapon(dict: Dictionary) -> WeaponData:
   weapon.burst_rounds = dict.get("burst", 0)
   weapon.has_safety = dict.get("has_safety", true)
   
+  weapon.twist_rate = dict.get("twist_rate", 254.0)  # Стандарт 1:10"
+  weapon.rifling_depth_mm = dict.get("rifling_depth_mm", 0.15)
+  weapon.rifling_clockwise = dict.get("rifling_clockwise", true)
+  weapon.progressive_rifling = dict.get("progressive_rifling", false)
+  weapon.rifling_shape = dict.get("rifling_shape", Globals.Rifling.TRAPEZOID)
+  
   # Параметры fire_rate с защитой
   var fire_rate = dict.get("fire_rate", {})
   if fire_rate is Dictionary:

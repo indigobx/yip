@@ -205,7 +205,7 @@ animations = [{
 }]
 
 [node name="Bar" type="HBoxContainer"]
-custom_minimum_size = Vector2(580, 28)
+custom_minimum_size = Vector2(320, 28)
 offset_right = 60.0
 offset_bottom = 24.0
 script = ExtResource("1_gr2fh")

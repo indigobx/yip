@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://b3sw0mfw0j3pd"]
 
-[ext_resource type="Script" uid="uid://bphd78b852x5d" path="res://scripts/entities/Projectile.gd" id="1_mwr3u"]
+[ext_resource type="Script" uid="uid://bphd78b852x5d" path="res://scripts/entities/Projectile.disabled.gd" id="1_mwr3u"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mwr3u"]
 emission_enabled = true

@@ -24,6 +24,7 @@ InputHandler="*res://globals/InputHandler.gd"
 AmmoRegistry="*res://globals/AmmoRegistry.gd"
 WeaponRegistry="*res://globals/WeaponRegistry.gd"
 Ballistics="*res://globals/Ballistics.gd"
+Globals="*res://globals/Globals.gd"
 
 [display]
 

@@ -7,7 +7,6 @@ var current_mode: FireMode = FireMode.SINGLE
 var available_modes: Array[FireMode] = []
 
 # Ссылки
-var projectile = preload("res://scenes/weapons/Projectile.tscn")
 @onready var weapon_base: Node3D = $WeaponBase
 @onready var weapon_model: MeshInstance3D = $WeaponBase/WeaponModel
 @onready var muzzle: Marker3D = $WeaponBase/Muzzle
@@ -53,6 +52,16 @@ func _process(delta):
     current_spread_multiplier = max(1.0, current_spread_multiplier - delta * spread_multiplier_recovery)
   _update_recoil(delta)
 
+func _physics_process(delta: float) -> void:
+  if 'test_proj_01' in GameState.projectiles:
+    var time = Time.get_ticks_msec() / 1000.0
+    var proj = GameState.projectiles['test_proj_01']
+    if proj['ttl'] > time:
+      #print(time)
+      var new_proj = Ballistics.update_projectile(proj, delta)
+      GameState.update_projectile('test_proj_01', new_proj)
+      #print(new_proj)
+      GameState.game.debug_send(new_proj)
 
 func _aim() -> void:
   # Поворот всего оружия (Weapon) для прицеливания
@@ -229,9 +238,6 @@ func _fire():
   if not ammo:
     push_error("No ammo assigned to firearm!")
     return
-
-  var proj = projectile.instantiate()
-  proj.ammo = ammo.duplicate(true)
   
   # Разброс
   current_spread_multiplier = min(
@@ -243,11 +249,14 @@ func _fire():
   var base_direction = -muzzle.global_transform.basis.z
   var spread_direction = _apply_spread(base_direction)
   
-  var projectiles_node = get_tree().root.get_node_or_null("Main/Game/Projectiles")
-  if projectiles_node:
-    projectiles_node.add_child(proj)
-    proj.global_position = muzzle.global_position
-    proj.set_initial_direction(spread_direction)
+  var projectile = Ballistics.create_projectile(
+    weapon,
+    ammo.duplicate(true),
+    muzzle.global_position,
+    muzzle.global_basis
+  )
+  GameState.projectiles['test_proj_01'] = projectile
+  print(GameState.projectiles)
   
   _apply_recoil()
   

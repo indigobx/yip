@@ -32,8 +32,12 @@ var debug_data = {
   Engine.get_physics_frames(),
   Engine.get_process_frames()
   ]
-
+func _init():
+    print_stack()
+    print("Projectile instance created at: ", get_stack()[1])
 func _ready() -> void:
+  print_stack()  # Напечатает весь стек вызовов
+  print("Function called from: ", get_stack())  # Альтернативный вариант
   substeps = clamp(ceil(ammo.speed), 1, Config.projectile_max_substeps)
 
 func _debug() -> void:
@@ -89,7 +93,9 @@ func _physics_process(delta: float) -> void:
     _die()
 
 func _simulate_substep(sub_delta: float) -> bool:
-  Ballistics.update_projectile(self, sub_delta)
+  print_stack()
+  print("Function called from: ", get_stack())
+  #Ballistics.update_projectile(self, sub_delta)
   distance = (global_position - zero_position).length()
   
   var from = global_position

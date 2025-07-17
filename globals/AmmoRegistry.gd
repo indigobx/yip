@@ -46,6 +46,7 @@ func parse_ammo_dict(dict: Dictionary) -> AmmoData:
   ammo.speed = dict.get("speed", 0.0)
   ammo.mass = dict.get("mass", 0.0)
   ammo.caliber = dict.get("caliber", 0.0)
+  ammo.length = dict.get("length", 0.0)
   ammo.spread_moa = dict.get("spread_moa", 4.0)
   ammo.drag_coef = dict.get("drag_coef", 0.0)
   ammo.stab_type = dict.get("stab_type", 0)

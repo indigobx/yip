@@ -2,8 +2,13 @@ class_name WeaponData
 extends Resource
 
 @export var name: String = ""
-@export var mass: float = 0.0
-@export var barrel_length: float = 0.0
+@export var mass: float = 1.0
+@export var barrel_length: float = 100.0
+@export var twist_rate: float = 254.0
+@export var rifling_depth_mm: float = 0.05
+@export var rifling_clockwise: float = true
+@export var progressive_rifling: float = false
+@export var rifling_shape: float = Globals.Rifling.TRAPEZOID
 @export var spread_moa: float = 4.0
 @export var ammo_type: String = ""
 @export var fire_rate_single: float = 0.0

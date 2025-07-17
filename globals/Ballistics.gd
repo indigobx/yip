@@ -1,129 +1,188 @@
 extends Node3D
 
-# Обновление снаряда — один physics_step
-func update_projectile(projectile: Node3D, delta: float) -> void:
-  var ammo: AmmoData = projectile.ammo
-  var velocity: Vector3 = projectile.velocity
-  var env: Dictionary = GameState.env_conditions
-
-  var mass: float = ammo.mass * 0.001  # г → кг
-  var radius: float = ammo.caliber * 0.001 * 0.5  # мм → м
-  var cross_section: float = PI * radius * radius
-
-  var rho: float = get_air_density(env["pressure"], env["temperature"], env["atmosphere"])
-  var drag: float = 0.5 * ammo.drag_coef * rho * cross_section * velocity.length_squared()
-  var drag_force: Vector3 = -velocity.normalized() * drag
-  var acceleration: Vector3 = drag_force / mass
-
-  # Гравитация
-  acceleration.y -= env["gravity"]
-
-  # Тяга
-  if ammo.has_thruster and projectile.burn_time < ammo.burn_time:
-    var thrust_force: float = ammo.thrust_force
-    var thrust_accel: Vector3 = projectile.global_transform.basis.z.normalized() * thrust_force / mass
-    acceleration += thrust_accel
-
-    var burn_rate: float = ammo.fuel_mass / ammo.burn_time  # г/с
-    projectile.burn_time += delta
-    mass -= burn_rate * delta * 0.001  # г → кг
-
-  # Ветер
-  var wind: Vector3 = env["wind_direction"].normalized() * env["wind_strength"]
-  var wind_effect: Vector3 = (wind - velocity) * 0.05
-  acceleration += wind_effect
-
-  # Обновление скорости и позиции
-  velocity += acceleration * delta
-  projectile.velocity = velocity
-  projectile.global_position += velocity * delta
-
-  # Ориентируем по траектории
-  if velocity.length_squared() > 1.0:
-    var target_pos = projectile.global_position + velocity
-    var up_dir = Vector3.UP
-
-    # Проверка коллинеарности (если направление почти совпадает с "вверх")
-    if velocity.normalized().abs().dot(up_dir.abs()) > 0.99:
-        up_dir = Vector3.FORWARD  # Альтернативный вектор
-
-    projectile.look_at(target_pos, up_dir)
-
-# Расчёт точки попадания с учётом среды
-func get_hit_point(origin: Vector3, direction: Vector3, ammo: AmmoData, max_distance: float = 1000.0) -> Dictionary:
-  var velocity: Vector3 = direction.normalized() * ammo.speed
-  var position: Vector3 = origin
-
-  var env: Dictionary = GameState.env_conditions
-  var mass: float = ammo.mass * 0.001
-  var radius: float = ammo.caliber * 0.001 * 0.5
-  var cross_section: float = PI * radius * radius
-  var rho: float = get_air_density(env["pressure"], env["temperature"], env["atmosphere"])
-
-  var space_state: PhysicsDirectSpaceState3D = GameState.get_world_3d().direct_space_state
-
-  var distance_traveled: float = 0.0
-  var step: float = 0.1  # м (частота трассировки)
-
-  while distance_traveled < max_distance:
-    # Расчёт drag + gravity + ветер
-    var drag: float = 0.5 * ammo.drag_coef * rho * cross_section * velocity.length_squared()
-    var drag_force: Vector3 = -velocity.normalized() * drag
-    var acceleration: Vector3 = drag_force / mass
-    acceleration.y -= env["gravity"]
-    var wind: Vector3 = env["wind_direction"].normalized() * env["wind_strength"]
-    var wind_effect: Vector3 = (wind - velocity) * 0.05
-    acceleration += wind_effect
-
-    velocity += acceleration * step
-    var next_pos: Vector3 = position + velocity.normalized() * step
-
-    # Raycast до следующей точки
-    var query := PhysicsRayQueryParameters3D.create(position, next_pos)
-    var result: Dictionary = space_state.intersect_ray(query)
-
-    if result.size() > 0:
-      return {
-        "hit": true,
-        "position": result["position"],
-        "normal": result["normal"],
-        "collider": result["collider"]
-      }
-
-    position = next_pos
-    distance_traveled += step
-
+func create_projectile(weapon: WeaponData, ammo: AmmoData, muzzle_pos: Vector3, muzzle_rot: Basis) -> Dictionary:
+  var direction = -muzzle_rot.z.normalized()
+  
+  var length_diameter_ratio = 3.0
+  if ammo.get("length") != null and ammo.caliber > 0:
+    length_diameter_ratio = ammo.length / ammo.caliber
+  elif ammo.get("length_diameter_ratio") != null:
+    length_diameter_ratio = ammo.length_diameter_ratio
+  
+  var angular_velocity = Vector3.ZERO
+  if ammo.stab_type == 1:
+    var twist_rate_m = weapon.twist_rate * 0.001
+    var spin_magnitude = (2.0 * PI * ammo.speed) / twist_rate_m
+    angular_velocity = Vector3(0, 0, spin_magnitude) * (-1.0 if weapon.rifling_clockwise else 1.0)
+  
   return {
-    "hit": false,
-    "position": position
+    "weapon": weapon,
+    "ammo": ammo,
+    "weapon.name": weapon.name,
+    "ammo.name": ammo.name,
+    "uid": Globals.gen_uid(8, "proj_"),
+    "position": muzzle_pos,
+    "velocity": direction * ammo.speed,
+    "rotation": muzzle_rot,
+    "flight_time": 0.0,
+    "mass": ammo.mass,
+    "caliber": ammo.caliber,
+    "drag_coef": ammo.drag_coef,
+    "cross_section": PI * pow(ammo.caliber * 0.0005, 2),
+    "length": ammo.length,
+    "length_diameter_ratio": length_diameter_ratio,
+    "core_mass": ammo.core_mass,
+    "core_hardness": ammo.core_hardness,
+    "core_caliber": ammo.core_caliber,
+    "kind": "normal",
+    "state": "normal",
+    "ricochet_min_angle": ammo.ricochet_min_angle,
+    "ricochet_max_angle": ammo.ricochet_max_angle,
+    "fragmentation_chance": ammo.get_property("fragmentation_chance", 0.0),
+    "fragments_min": ammo.get_property("fragments_min", 0),
+    "fragments_max": ammo.get_property("fragments_max", 0),
+    "impact_count": 0,
+    "ricochet_count": 0,
+    "penetration_count": 0,
+    "fragmentation_count": 0,
+    "ttl": Time.get_ticks_msec() / 1000.0 + Config.projectile_ttl,
+    "spin_decay_rate": 0.998,
+    "angular_velocity": angular_velocity,
+    "magnus_effect_factor": 0.00025 * weapon.rifling_depth_mm * length_diameter_ratio
   }
 
-# Плотность воздуха (зависит от атмосферы)
-func get_air_density(pressure: float, temperature: float, atmosphere: String) -> float:
-  var R: float = 8.314
-  var M: float = 0.029
-
-  match atmosphere:
-    "clean_air", "urban_air":
-      M = 0.029
-    "oxygen":
-      M = 0.032
-    "co2":
-      M = 0.044
-    "methane":
-      M = 0.016
-    "helium":
-      M = 0.004
-    "argon":
-      M = 0.040
-    "underwater":
-      return 997.0
+func update_projectile(proj: Dictionary, delta: float) -> Dictionary:
+  var new_proj = proj.duplicate(true)
+  var medium = GameState.env_conditions["medium"]
+  
+  match medium:
+    Globals.Medium.WATER:
+      _apply_underwater_physics(new_proj, delta)
+    Globals.Medium.VACUUM:
+      _apply_vacuum_physics(new_proj, delta)
     _:
-      M = 0.029
+      _apply_air_physics(new_proj, delta)
+  
+  if not new_proj["velocity"].is_finite():
+    new_proj["velocity"] = Vector3.ZERO
+  if not new_proj["position"].is_finite():
+    new_proj["position"] = Vector3.ZERO
+  new_proj["position"] += new_proj["velocity"] * delta
+  return new_proj
 
-  var T: float = temperature + 273.15
-  var P: float = pressure * 101325.0
-  return (P * M) / (R * T)
+func _apply_air_physics(proj: Dictionary, delta: float) -> void:
+  _apply_gravity(proj, delta)
+  _apply_drag_linear(proj, delta)
+  _apply_drag_angular(proj, delta)
+  _apply_wind(proj, delta)
+  _apply_spin(proj, delta)
+
+func _apply_underwater_physics(proj: Dictionary, delta: float) -> void:
+  # Получаем параметры воды из Globals
+  var medium_profile = Globals.get_medium(Globals.Medium.WATER)
+  var density = medium_profile["base_density"]
+  var viscosity = medium_profile["viscosity"]
+  
+  # 1. Гидродинамическое сопротивление (комбинация квадратичного и вязкого)
+  var speed = proj["velocity"].length()
+  var radius = proj["caliber"] * 0.0005
+  
+  # Квадратичное сопротивление (доминирует на высоких скоростях)
+  var quadratic_drag = 0.5 * density * speed * speed * proj["drag_coef"] * proj["cross_section"]
+  
+  # Вязкое сопротивление (по Стоксу, доминирует на низких скоростях)
+  var stokes_drag = 6 * PI * viscosity * radius * speed
+  
+  # Комбинированная модель (переход между режимами)
+  var total_drag = quadratic_drag + stokes_drag
+  proj["velocity"] -= total_drag * delta / (proj["mass"] * 0.001) * proj["velocity"].normalized()
+  
+  # 2. Динамическая плавучесть (зависит от глубины)
+  var depth_factor = clamp(abs(proj["position"].y) / 10.0, 0.0, 1.0)
+  var buoyancy = (0.5 + 0.3 * depth_factor) * GameState.env_conditions["gravity"] * delta
+  proj["velocity"].y += buoyancy
+  
+  # 3. Быстрая потеря вращения (в 5 раз быстрее чем в воздухе)
+  proj["angular_velocity"] *= pow(0.8, delta) 
+  
+  # 4. Дополнительные эффекты для пуль в воде
+  if proj["flight_time"] < 0.1:  # Первые 100мс - кавитация
+    proj["velocity"] *= 0.95  # Дополнительные потери энергии
+
+func _apply_vacuum_physics(proj: Dictionary, delta: float) -> void:
+  proj["velocity"].y -= GameState.env_conditions["gravity"] * delta
+  proj["angular_velocity"] *= 0.999 ** delta
+
+func _apply_gravity(proj: Dictionary, delta: float) -> void:
+  proj["velocity"].y -= GameState.env_conditions["gravity"] * delta
+
+func _apply_drag_linear(proj: Dictionary, delta: float) -> void:
+  var env = GameState.env_conditions
+  var density = Globals.get_medium_density(env["medium"], env["temperature"], env.get("pressure", -1.0))
+  
+  var mass_kg = proj["mass"] * 0.001
+  var speed = proj["velocity"].length()
+  var drag_force = 0.5 * density * speed * speed * proj["drag_coef"] * proj["cross_section"]
+  proj["velocity"] -= drag_force * delta / mass_kg * proj["velocity"].normalized()
+
+func _apply_viscous_drag(proj: Dictionary, density: float, viscosity: float, delta: float) -> void:
+  var radius = proj["caliber"] * 0.0005
+  var drag_force = 6 * PI * viscosity * radius * proj["velocity"]
+  proj["velocity"] -= drag_force * delta / (proj["mass"] * 0.001)
+
+func _apply_drag_angular(proj: Dictionary, delta: float) -> void:
+  if proj["angular_velocity"].length_squared() > 0:
+    var angular_drag = 0.1 * proj["drag_coef"] * delta
+    proj["angular_velocity"] *= 1.0 - angular_drag
+
+func _apply_wind(proj: Dictionary, delta: float) -> void:
+  var wind = GameState.env_conditions["wind_direction"].normalized() * GameState.env_conditions["wind_strength"]
+  proj["velocity"] += (wind - proj["velocity"]) * 0.05 * delta
+
+func _apply_spin(proj: Dictionary, delta: float) -> void:
+  if proj["ammo"].stab_type != 1:
+    return
+
+  # 1. Получаем текущее вращение
+  var rot = Basis(proj["rotation"])
+  if not _is_basis_valid(rot):
+    rot = Basis.IDENTITY
+
+  # 2. Применяем потери вращения
+  var spin_decay = 0.998  # Воздух
+  if GameState.env_conditions["medium"] == Globals.Medium.WATER:
+    spin_decay = 0.8  # Вода
+  
+  proj["angular_velocity"] *= pow(spin_decay, delta)
+
+  # 3. Вращаем снаряд
+  if proj["angular_velocity"].length_squared() > 0.01:
+    var axis = proj["angular_velocity"].normalized()
+    var angle = proj["angular_velocity"].length() * delta
+    rot = rot.rotated(axis, angle)
+    proj["rotation"] = rot
+
+  # 4. Эффект Магнуса (только для нормальных снарядов)
+  if proj["state"] == "normal" and proj["angular_velocity"].length() > 10.0:
+    var vel_dir = proj["velocity"].normalized()
+    if _is_vector_valid(vel_dir):
+      var magnus_force = (
+        proj["angular_velocity"].cross(vel_dir).normalized() *
+        0.00025 *
+        proj["weapon"].rifling_depth_mm *
+        proj["ammo"].length_diameter_ratio *
+        delta
+      )
+      proj["velocity"] += magnus_force
+
+func _is_vector_valid(v: Vector3) -> bool:
+  return v.x != NAN and v.y != NAN and v.z != NAN and v.is_finite()
+
+func _is_basis_valid(b: Basis) -> bool:
+  return _is_vector_valid(b.x) and _is_vector_valid(b.y) and _is_vector_valid(b.z)
+
+func get_medium_density(medium: Globals.Medium, temp: float, pressure: float = -1.0) -> float:
+  return Globals.get_medium_density(medium, temp, pressure)
 
 func get_aim_direction(from: Vector3, to: Vector3, ammo: AmmoData) -> Vector3:
   var g: float = GameState.env_conditions.get("gravity", 9.81)
@@ -146,11 +205,3 @@ func get_targets_in_radius(position: Vector3, radius: float) -> Array:
   query.shape.radius = radius
   query.transform = Transform3D.IDENTITY.translated(position)
   return space_state.intersect_shape(query)
-
-func check_penetration(projectile: Projectile, target, hit_position: Vector3) -> bool:
-  if not target.has_method("get_armor_thickness"):
-    return false
-      
-  var armor_thickness = target.get_armor_thickness(hit_position)
-  var penetration_required = armor_thickness * (1.0 - projectile.ammo.damage_profile["armor_piercing"])
-  return projectile.ammo.penetration_power >= penetration_required

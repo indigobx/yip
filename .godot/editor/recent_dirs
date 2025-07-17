@@ -1,3 +1,4 @@
+res://globals
 res://scripts/ui
 res://scenes/ui
 res://scripts/fx
@@ -6,7 +7,6 @@ res://assets/weapon_fx
 res://resources/weapon_fx
 res://scenes/world/00_test_range
 res://scripts/world
-res://globals
 res://scripts/entities
 E:/Godot/yip/resources/weapons
 res://resources/weapons
