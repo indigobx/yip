@@ -25,6 +25,7 @@ AmmoRegistry="*res://globals/AmmoRegistry.gd"
 WeaponRegistry="*res://globals/WeaponRegistry.gd"
 Ballistics="*res://globals/Ballistics.gd"
 Globals="*res://globals/Globals.gd"
+Physics="*res://globals/Physics.gd"
 
 [display]
 

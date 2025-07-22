@@ -181,8 +181,8 @@ func _is_vector_valid(v: Vector3) -> bool:
 func _is_basis_valid(b: Basis) -> bool:
   return _is_vector_valid(b.x) and _is_vector_valid(b.y) and _is_vector_valid(b.z)
 
-func get_medium_density(medium: Globals.Medium, temp: float, pressure: float = -1.0) -> float:
-  return Globals.get_medium_density(medium, temp, pressure)
+func get_medium_density(medium: Physics.Medium, temp: float, pressure: float = -1.0) -> float:
+  return Physics.get_medium_density(medium, temp, pressure)
 
 func get_aim_direction(from: Vector3, to: Vector3, ammo: AmmoData) -> Vector3:
   var g: float = GameState.env_conditions.get("gravity", 9.81)
