@@ -1,5 +1,17 @@
 extends Node3D
 
+func hitscan(weapon: WeaponData, ammo: AmmoData, muzzle_pos: Vector3, muzzle_rot: Basis) -> Dictionary:
+  var direction = -muzzle_rot.z.normalized()
+  var space = get_world_3d().direct_space_state
+  var params = PhysicsRayQueryParameters3D.new()
+  params.from = muzzle_pos
+  params.to = direction
+  var result = space.intersect_ray(params)
+  if result:
+    return result
+  else:
+    return {}
+
 func create_projectile(weapon: WeaponData, ammo: AmmoData, muzzle_pos: Vector3, muzzle_rot: Basis) -> Dictionary:
   var direction = -muzzle_rot.z.normalized()
   
@@ -124,11 +136,6 @@ func _apply_drag_linear(proj: Dictionary, delta: float) -> void:
   var speed = proj["velocity"].length()
   var drag_force = 0.5 * density * speed * speed * proj["drag_coef"] * proj["cross_section"]
   proj["velocity"] -= drag_force * delta / mass_kg * proj["velocity"].normalized()
-
-func _apply_viscous_drag(proj: Dictionary, density: float, viscosity: float, delta: float) -> void:
-  var radius = proj["caliber"] * 0.0005
-  var drag_force = 6 * PI * viscosity * radius * proj["velocity"]
-  proj["velocity"] -= drag_force * delta / (proj["mass"] * 0.001)
 
 func _apply_drag_angular(proj: Dictionary, delta: float) -> void:
   if proj["angular_velocity"].length_squared() > 0:

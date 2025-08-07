@@ -249,14 +249,13 @@ func _fire():
   var base_direction = -muzzle.global_transform.basis.z
   var spread_direction = _apply_spread(base_direction)
   
-  var projectile = Ballistics.create_projectile(
+  var shot = Ballistics.hitscan(
     weapon,
-    ammo.duplicate(true),
+    ammo,
     muzzle.global_position,
     muzzle.global_basis
   )
-  GameState.projectiles['test_proj_01'] = projectile
-  print(GameState.projectiles)
+  print(shot)
   
   _apply_recoil()
   
