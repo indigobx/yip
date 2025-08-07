@@ -25,8 +25,7 @@ class JSONRequestHandler(http.server.BaseHTTPRequestHandler):
       print("Wrong JSON")
 
   def log_message(self, format, *args):
-    return  # Отключаем лишние логи
-
+    return
 
 if __name__ == "__main__":
   with socketserver.TCPServer(("", PORT), JSONRequestHandler) as httpd:
