@@ -1,0 +1,10 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://cgkhjdv4pm5af"]
+
+[ext_resource type="FontFile" uid="uid://dda8agmxf5rt7" path="res://assets/fonts/PixelCode-Medium.otf" id="1_eq17k"]
+
+[resource]
+font = ExtResource("1_eq17k")
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.2)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.666667)

@@ -17,14 +17,9 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-Config="*res://globals/Config.gd"
 GameState="*res://globals/GameState.gd"
-PlayerData="*res://globals/PlayerData.gd"
-InputHandler="*res://globals/InputHandler.gd"
-AmmoRegistry="*res://globals/AmmoRegistry.gd"
-WeaponRegistry="*res://globals/WeaponRegistry.gd"
-Ballistics="*res://globals/Ballistics.gd"
-Globals="*res://globals/Globals.gd"
+SceneManager="*res://globals/SceneManager.gd"
+UiManager="*res://globals/UIManager.gd"
 
 [display]
 

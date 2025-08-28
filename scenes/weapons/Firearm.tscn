@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bo6plb7fblcgr"]
-
-[ext_resource type="Script" uid="uid://cjtngep4kfj0x" path="res://scripts/entities/weapons/Firearm.gd" id="1_fdcqk"]
-
-[node name="Firearm" type="Node3D"]
-script = ExtResource("1_fdcqk")
