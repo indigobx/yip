@@ -1,5 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://mxopmpbg2l3t"]
+[gd_scene load_steps=4 format=3 uid="uid://mxopmpbg2l3t"]
 
+[ext_resource type="Script" uid="uid://duldiirirvybm" path="res://scripts/ui/main_menu.gd" id="1_1g8jr"]
 [ext_resource type="Theme" uid="uid://d333ry3n2pba1" path="res://resources/themes/main_menu.tres" id="1_fe2o3"]
 [ext_resource type="LabelSettings" uid="uid://cgkhjdv4pm5af" path="res://resources/labelsettings/menu_16.tres" id="2_1g8jr"]
 
@@ -10,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_1g8jr")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -33,19 +35,17 @@ theme_override_constants/separation = 16
 
 [node name="NewGame" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 6
 theme = ExtResource("1_fe2o3")
 text = "New Game"
 
 [node name="Settings" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 6
 theme = ExtResource("1_fe2o3")
+disabled = true
 text = "Settings"
 
 [node name="Quit" type="Button" parent="MarginContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 6
 theme = ExtResource("1_fe2o3")
 text = "Quit Game"
 
@@ -60,3 +60,6 @@ GR: Ταχὺς καφὲς ψάχνει ζωντανὴ μουσική
 ← ↑ → ↓ ⇐ ⇒ ⇑ ⇓ ↔ ↕
 ' \" ‘ ’ “ ” « » ` ´"
 label_settings = ExtResource("2_1g8jr")
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

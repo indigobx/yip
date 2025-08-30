@@ -4,3 +4,8 @@
 
 [node name="Main" type="Node"]
 script = ExtResource("1_ig7tw")
+
+[node name="UI" type="CanvasLayer" parent="."]
+follow_viewport_enabled = true
+
+[node name="World" type="Node3D" parent="."]

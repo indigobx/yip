@@ -10,4 +10,24 @@ enum GameStates {
   EXITING        # выход из игры / завершение
 }
 
-var game_state: GameStates = GameStates.BOOT
+var game_state: GameStates = GameStates.BOOT:
+  set(value):
+    if game_state == value:
+      return
+    game_state = value
+    _on_game_state_changed(value)
+
+signal game_state_changed(new_state)
+
+func _ready():
+  game_state = GameStates.BOOT
+
+func _on_game_state_changed(new_state: GameStates) -> void:
+  emit_signal("game_state_changed", new_state)
+
+func start_new_game() -> void:
+  game_state = GameStates.LOADING
+  UIManager.hide_all("modal")
+  UIManager.show(UIManager.UIKey.LOADING_SCREEN, "base")
+  
+  

@@ -1,6 +1,15 @@
+CodeEdit
+RichTextLabel
+ScrollContainer
 VBoxContainer
-Button
+MarginContainer
+MeshInstance3D
+Node3D
+Marker3D
+ProgressBar
 Label
+CanvasLayer
+Control
+Button
 GridContainer
 HBoxContainer
-MarginContainer

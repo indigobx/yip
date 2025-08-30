@@ -12,10 +12,10 @@ border_width_bottom = 3
 border_color = Color(0.133333, 0.0980392, 0.14902, 1)
 corner_radius_top_left = 10
 corner_detail = 1
-expand_margin_left = 16.0
-expand_margin_top = 4.0
-expand_margin_right = 16.0
-expand_margin_bottom = 4.0
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ori1h"]
@@ -28,10 +28,10 @@ border_width_bottom = 3
 border_color = Color(0.54902, 0.498039, 0.560784, 1)
 corner_radius_top_left = 10
 corner_detail = 1
-expand_margin_left = 16.0
-expand_margin_top = 4.0
-expand_margin_right = 16.0
-expand_margin_bottom = 4.0
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pnwnc"]
@@ -44,10 +44,10 @@ border_width_bottom = 3
 border_color = Color(0.54902, 0.498039, 0.560784, 1)
 corner_radius_top_left = 10
 corner_detail = 1
-expand_margin_left = 16.0
-expand_margin_top = 4.0
-expand_margin_right = 16.0
-expand_margin_bottom = 4.0
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tjj83"]
@@ -60,10 +60,10 @@ border_width_bottom = 3
 border_color = Color(0.478431, 0.439216, 0.501961, 1)
 corner_radius_top_left = 10
 corner_detail = 1
-expand_margin_left = 16.0
-expand_margin_top = 4.0
-expand_margin_right = 16.0
-expand_margin_bottom = 4.0
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
 anti_aliasing = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hy68i"]
@@ -76,10 +76,10 @@ border_width_bottom = 3
 border_color = Color(0.580392, 0.85098, 0.647059, 1)
 corner_radius_top_left = 10
 corner_detail = 1
-expand_margin_left = 16.0
-expand_margin_top = 4.0
-expand_margin_right = 16.0
-expand_margin_bottom = 4.0
+expand_margin_left = 8.0
+expand_margin_top = 2.0
+expand_margin_right = 8.0
+expand_margin_bottom = 2.0
 anti_aliasing = false
 
 [resource]

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="YIP"
-run/main_scene="uid://dmu6q4qp88txl"
+run/main_scene="uid://buqal6jieibbw"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -19,11 +19,14 @@ config/icon="res://icon.svg"
 
 GameState="*res://globals/GameState.gd"
 SceneManager="*res://globals/SceneManager.gd"
-UiManager="*res://globals/UIManager.gd"
+UIManager="*res://globals/UIManager.gd"
+LevelManager="*res://globals/LevelManager.gd"
+Console="*res://globals/Console.gd"
 
 [display]
 
 window/size/always_on_top=true
+window/dpi/allow_hidpi=false
 
 [editor_plugins]
 
@@ -97,6 +100,11 @@ ts_minus={
 ts_stop={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194436,"key_label":0,"unicode":46,"location":0,"echo":false,"script":null)
+]
+}
+toggle_console={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":96,"location":0,"echo":false,"script":null)
 ]
 }
 

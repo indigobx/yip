@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://dk5nq2dhi5x8l"]
+
+[ext_resource type="PackedScene" uid="uid://cxl3sga783ym6" path="res://assets/levels/00/level.blend" id="1_rhuve"]
+
+[node name="Level00" type="Node3D"]
+
+[node name="level" parent="." instance=ExtResource("1_rhuve")]
+
+[node name="Markers" type="Node3D" parent="."]
+
+[node name="SpawnPoint" type="Marker3D" parent="Markers"]
